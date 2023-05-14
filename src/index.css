@@ -1,5 +1,27 @@
-body {
+/* Contains all global style */
+
+*, *::after, *::before{
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Theme Colors */
+:root{
+  --dark: #131e27;
+  --theme-dark: #1b354a;
+  --theme-blue: #00a2ed;
+  --light: #fafafa;
+  --theme-light: #f0f0f0;
+}
+
+
+html{
+  background-color: var(--dark);
+  color: var(--theme-light);
+}
+
+body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -10,4 +32,23 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+a {
+  text-decoration: none;
+  color: var(--theme-light);
+}
+
+li {
+  list-style: none;
+}
+
+.relative{
+  position: relative;
+}
+
+.btn{
+  border: none;
+  outline: none;
+  border-radius: .15rem;
 }

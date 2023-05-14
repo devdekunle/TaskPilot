@@ -1,0 +1,25 @@
+.homepage{
+    padding: 0 2rem;
+}
+
+
+.homepage-img > img{
+    object-fit: cover;
+    width: 100%;
+}
+
+.homepage-text{
+    margin-top: 1rem;
+}
+
+.homepage-text > h1{
+    color: var(--theme-blue);
+}
+
+.homepage-btn{
+    background-color: var(--theme-blue);
+    width: 100%;
+    height: 50px;
+    margin-top: 2rem;
+    font-weight: 700;
+}
