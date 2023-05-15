@@ -3,7 +3,10 @@
     top: 0;
     left: 0;
     width: 100%;
+    font-family: 'Syne', sans-serif;
+    font-weight: 100;
 }
+
 
 .navbar-isClosed{
     display: flex;
@@ -73,4 +76,51 @@
 
 .navbar ul > li > a:hover{
     background-color: rgba(0, 162, 237, .3);
+}
+
+
+/* Media Query */
+@media  screen and (min-width: 756px) {
+    .navbar{
+        position: static;
+        height: 70px;
+    }
+
+    .navbar-isClosed, .navbar-desktop > p.logo > .close-icon{
+        display: none;
+    }
+    
+    .navbar-desktop{
+        display: flex;
+        position: inherit;
+        height: 100%;
+        width: 100%;
+        justify-content: space-between;
+        background-color: transparent;
+        align-items: center;
+        border: none;
+        padding: 0  2rem;
+    }
+    
+    .navbar ul {
+        display: flex;
+        align-items: center;
+    }
+   
+    .navbar ul > li,
+    .navbar ul > li > a {
+        border-bottom: none;
+        margin: 0 .5rem;
+        padding: 0;
+    }
+
+    .active{
+        color: var(--theme-blue);
+        background-color: transparent;
+    }
+
+    .navbar ul > li > a:hover{
+    color: rgba(0, 162, 237, .3);
+    background-color: transparent;
+}
 }

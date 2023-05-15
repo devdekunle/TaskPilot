@@ -51,4 +51,5 @@ li {
   border: none;
   outline: none;
   border-radius: .15rem;
+  cursor: pointer;
 }

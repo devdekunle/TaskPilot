@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700&display=swap');
+
 .homepage{
     padding: 0 2rem;
 }
@@ -10,10 +12,23 @@
 
 .homepage-text{
     margin-top: 1rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    text-transform: lowercase;
+    text-align: center;
+    letter-spacing: 1px;
 }
 
-.homepage-text > h1{
-    color: var(--theme-blue);
+.homepage-text > p{
+    font-size: 1rem;
+    color: grey;
+    margin-top: .5rem;
+}
+
+.homepage-text > p > span{
+    color: var(--theme-blue); 
+    text-transform: uppercase;
+    font-weight: 800;       
 }
 
 .homepage-btn{
@@ -22,4 +37,41 @@
     height: 50px;
     margin-top: 2rem;
     font-weight: 700;
+    font-family: 'Syne', sans-serif;
+}
+
+/* Media Query */
+@media  screen and (min-width: 756px){
+    .homepage{
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        padding: 0 5rem;
+    }
+
+    .homepage-img{
+        width: calc(50% - 2rem);
+    }
+    
+    .homepage-text{
+        border: 2px solid blue;
+        display: flex;
+        flex-direction: column;
+        font-size: 2.5rem;
+        width: calc(50% - 2rem);
+        text-align: left;
+        text-transform: capitalize;
+        padding: 2rem;
+        position: relative;
+    }
+
+ 
+    .homepage-btn{
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translate(-50%, 1rem);
+        width: 90%;
+    }
+
 }
