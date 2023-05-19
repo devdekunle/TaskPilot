@@ -2,9 +2,11 @@ import React from 'react';
 import homePageImg from '../assets/homepage-img.png';
 import '../styles/homepage.css';
 import { motion } from 'framer-motion';
+import WordAnimation from '../components/WordAnimation';
 
 
 const Home = () => {  
+  const words = ['collaboration', 'easy', 'fast', 'analysis']
   return (
       <main className='homepage'> 
         <motion.section className="homepage-img"
@@ -22,10 +24,11 @@ const Home = () => {
         exit={{ opacity: 0, y: '-100%' }}
         transition={{ duration: 1.5 }}
       >
-              <h3>WHY WORK ALONE, WHEN YOU HAVE A CO-PILOT...</h3>
-              <p>Your Ultimate co-pilot for task management - <span>Task Pilot</span></p>
-              <button className="btn homepage-btn">Get Started</button>
-          </motion.section>
+          <h3>WHY WORK ALONE, WHEN YOU HAVE A CO-PILOT...</h3>
+          <p>Your Ultimate co-pilot for task management - <span>Task Pilot</span></p>
+          <WordAnimation words={words}  className={'word'} containerClassName={'word-container'}/>
+          <button className="btn homepage-btn">Get Started</button>
+        </motion.section>
     </main>
   )
 }

@@ -1,0 +1,16 @@
+.auth{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    color: var(--theme-light);
+    overflow: hidden;
+}
+
+
+/* Media Query */
+@media  screen and (min-width: 756px) {
+.auth {
+    height: calc(100vh - 70px);
+}
+
+}

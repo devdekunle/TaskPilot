@@ -1,0 +1,72 @@
+.auth .form-container{
+    width: 80%;
+    margin: 0 auto;
+}
+
+
+.signup-form, .login-form{
+    display: flex;
+    flex-direction: column;    
+    width: 100%;
+    margin: auto;
+    max-width: 480px;
+    background-color: var(--theme-dark);
+    padding: 1rem;
+    border-radius: .25rem;
+    box-shadow: 0 0 12px 3px rgba(0, 0, 0, .3);    
+}
+
+.heading{
+    text-align: center;
+}
+
+.auth label{
+    margin-top: 1rem;
+}
+
+.auth input {
+ /* margin-bottom: 1rem; */
+ margin-top: .25rem;
+ background-color: transparent;
+ border: none;
+ outline: none;
+ border-bottom: 1px solid var(--theme-light);
+ color: var(--theme-light);
+}
+
+.auth .btn{
+    padding: 1rem;
+    margin-top: 1.5rem;
+    background-color: var(--theme-blue);
+    font-weight: 700;
+    color: var(--theme-light);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.auth .error{
+    color: rgb(245, 48, 48);
+    font-size: .75rem;
+}
+
+.show-login-form{
+    color: grey;
+    margin-top: .25rem;
+}
+
+.show-login-form > span{
+    color: var(--theme-blue);
+    cursor: pointer;
+}
+
+.forgot-pwd{
+    margin-top: 1rem;
+}
+
+/* Media Query */
+@media  screen and (min-width: 756px) {
+
+    .auth .form-container{
+        max-width: 480px;
+    }
+}

@@ -3,7 +3,6 @@
     top: 0;
     left: 0;
     width: 100%;
-    font-family: 'Syne', sans-serif;
     font-weight: 100;
 }
 
@@ -55,6 +54,7 @@
     margin: .5rem 0;
     border-bottom: 1px solid var(--light);
     font-weight: 200;
+    
 }
 
 .navbar ul > li > a{
@@ -62,10 +62,19 @@
     display: block;
     padding-left: .25rem;
     transition: all .5s ease-in;
+    display: flex;
+    align-items: center;
 }
 
-.navbar-open  > div.navbar-login{
+
+ div.navbar-login{
     margin-top: 2rem;
+}
+
+.navbar-login > .login-icon,
+.navlink_icon{
+    margin-right: .5rem;
+    font-size: .85rem;
 }
 
 /* ACTIVE NAV CLASS */
@@ -106,6 +115,8 @@
         display: flex;
         align-items: center;
     }
+
+
    
     .navbar ul > li,
     .navbar ul > li > a {
@@ -113,6 +124,11 @@
         margin: 0 .5rem;
         padding: 0;
     }
+
+    
+ div.navbar-login{
+    margin-top: 0;
+}
 
     .active{
         color: var(--theme-blue);

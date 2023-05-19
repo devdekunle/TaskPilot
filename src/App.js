@@ -1,12 +1,13 @@
 import LandingPage from "./layouts/LandingPage";
 import Navbar from "./components/Navbar";
-
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
-    <div style={{position: 'relative'}}>
+    <div style={{ position: "relative" }}>
       <Navbar></Navbar>
-      <LandingPage/>
+      <LandingPage />
+      <ToastContainer />
     </div>
   );
 }
