@@ -18,7 +18,7 @@ class BaseModel:
     create_time = Column(DateTime, default=datetime.utcnow())
     update_time = Column(DateTime, default=datetime.utcnow())
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.id = str(uuid.uuid4())
         self.create_time = datetime.utcnow()
         self.update_time = datetime.utcnow()
@@ -35,7 +35,13 @@ class BaseModel:
         # set time format for returned dictionary
         new_dict["create_time"] = new_dict["create_time"].strftime(time)
         new_dict["update_time"] = new_dict["update_time"].strftime(time)
+        if "_sa_instance_state" in new_dict:
+            del new_dict['_sa_instance_state']
         return new_dict
 
     def delete(self):
-        models.storage.delete(self)
+        storage.delete(self)
+
+    def save(self)
+        self.update_time = datetime.utcnow()
+        storage.save()

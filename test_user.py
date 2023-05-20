@@ -12,5 +12,5 @@ print(new_user)
 
 print()
 
-print(new_user.to_dict)
+print(new_user.to_dict())
 

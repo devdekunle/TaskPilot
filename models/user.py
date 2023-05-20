@@ -50,6 +50,6 @@ class User(BaseModel, Base):
     sub_task_comments = relationship('Comment', backref='sub_task_members')
 
 
-    def __init__(self):
-        
-        super.__init__()
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
