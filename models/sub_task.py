@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship
 
 
 class SubTask(BaseModel, Base):
-    """ task class"""
+    """ subtask class"""
     __tablename__ = 'sub_tasks'
     task_id = Column(String(60), ForeignKey('tasks.id'), nullable=False)
     title = Column(String(60), nullable=False)

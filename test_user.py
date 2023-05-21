@@ -4,7 +4,7 @@ from models import storage
 from models.user import User
 from models.project import Project
 from models.task import Task
-# from models.subtask_comment import SubTasKComment
+from models.subtask_comment import SubTaskComment
 from models.sub_task import SubTask
 from models.project_comment import ProjectComment
 from models.task_comment import TaskComment
@@ -48,7 +48,7 @@ if new_task_comment not in new_user.task_comments:
 
 storage.save()
 print("OK")
-
+print(new_user.subtask_comments)
 print()
 
 print("string representation of new_user object")
