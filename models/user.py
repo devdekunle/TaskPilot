@@ -8,27 +8,27 @@ from sqlalchemy.orm import relationship
 
 project_user = Table('project_user', Base.metadata,
                   Column('user_id', String(60),
-                        ForeignKey('user.id', onupdate='CASCADE',
+                        ForeignKey('users.id', onupdate='CASCADE',
                                     ondelete='CASCADE'), primary_key=True),
                   Column('project_id', String(60),
-                        ForeignKey('project.id', onupdate='CASCADE',
+                        ForeignKey('projects.id', onupdate='CASCADE',
                                     ondelete='CASCADE'), primary_key=True),
                   Column('user_role', String(60)))
 
 task_user = Table('task_user', Base.metadata,
                   Column('user_id', String(60),
-                        ForeignKey('user.id', onupdate='CASCADE',
+                        ForeignKey('users.id', onupdate='CASCADE',
                                     ondelete='CASCADE'), primary_key=True),
                   Column('task_id', String(60),
-                        ForeignKey('task.id', onupdate='CASCADE',
+                        ForeignKey('tasks.id', onupdate='CASCADE',
                                     ondelete='CASCADE'), primary_key=True),
                   Column('member_role', String(60)))
 sub_task_user = Table('sub_task_user', Base.metadata,
                   Column('user_id', String(60),
-                        ForeignKey('user.id', onupdate='CASCADE',
+                        ForeignKey('users.id', onupdate='CASCADE',
                                     ondelete='CASCADE'), primary_key=True),
                   Column('sub_task_id', String(60),
-                        ForeignKey('task.id', onupdate='CASCADE',
+                        ForeignKey('sub_tasks.id', onupdate='CASCADE',
                                     ondelete='CASCADE'), primary_key=True),
                   Column('member_role', String(60)))
 
@@ -45,11 +45,14 @@ class User(BaseModel, Base):
                          back_populates='members')
     sub_tasks = relationship('SubTask', secondary=sub_task_user,
                             back_populates='members')
-    project_comments = relationship('Comment', backref='project_members')
-    task_comments = relationship('Comment', backref='task_members')
-    sub_task_comments = relationship('Comment', backref='sub_task_members')
-
+    project_comments = relationship('ProjectComment',
+                                    backref='members',
+                                    cascade='all, delete, delete-orphan')
+    task_comments = relationship('TaskComment', backref='members',
+                                cascade='all, delete, delete-orphan')
+    subtask_comments = relationship('SubTaskComment',
+                                    backref='members',
+                                    cascade='all, delete, delete-orphan')
 
     def __init__(self, *args, **kwargs):
-
         super().__init__(*args, **kwargs)

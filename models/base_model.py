@@ -2,6 +2,7 @@
 """
 base models for other models to inherit from
 """
+import models
 import uuid
 from datetime import datetime
 import sqlalchemy
@@ -19,9 +20,27 @@ class BaseModel:
     update_time = Column(DateTime, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
-        self.id = str(uuid.uuid4())
-        self.create_time = datetime.utcnow()
-        self.update_time = datetime.utcnow()
+        if kwargs:
+            for key, value in kwargs.items():
+                if key != "__class__":
+                    setattr(self, key, value)
+            if kwargs.get("create_time", None) and type(self.create_time) is str:
+                # convert dictionary value to a datetime object with strptime
+                self.create_time = datetime.strptime(kwargs["create_time"], time)
+            else:
+                self.create_time = datetime.utcnow()
+
+            if kwargs.get("update_time", None) and type(self.update_time) is str:
+                self.update_time = datetime.strptime(kwargs["update_time"], time)
+            else:
+                self.update_time = datetime.utcnow()
+
+            if kwargs.get("id", None) is None:
+                self.id = str(uuid.uuid4())
+        else:
+            self.id = str(uuid.uuid4())
+            self.create_time = datetime.utcnow()
+            self.update_time = datetime.utcnow()
 
     def __str__(self):
         """ print string representation of the objects"""
@@ -40,8 +59,8 @@ class BaseModel:
         return new_dict
 
     def delete(self):
-        storage.delete(self)
+        models.storage.delete(self)
 
-    def save(self)
-        self.update_time = datetime.utcnow()
-        storage.save()
+    def save(self):
+        models.storage.new(self)
+        models.storage.save()
