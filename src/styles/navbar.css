@@ -41,7 +41,7 @@
     left: -100%;
 }
 
-.navbar-open >p.logo{
+p.logo{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -71,7 +71,11 @@
     margin-top: 2rem;
 }
 
-.navbar-login > .login-icon,
+.navbar-login > a{
+    padding: .25rem;
+    display: block;
+}
+
 .navlink_icon{
     margin-right: .5rem;
     font-size: .85rem;
@@ -83,7 +87,8 @@
     color: var(--dark);
 }
 
-.navbar ul > li > a:hover{
+.navbar ul > li > a:hover,
+.navbar-login > a:hover{
     background-color: rgba(0, 162, 237, .3);
 }
 
@@ -117,7 +122,6 @@
     }
 
 
-   
     .navbar ul > li,
     .navbar ul > li > a {
         border-bottom: none;

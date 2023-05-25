@@ -1,0 +1,52 @@
+.side-nav{
+    min-height: 100vh;
+    width: 300px;
+    color: lightgrey;
+    background-color: var(--theme-dark);
+    z-index: 1;
+    flex: 0 0 300px;
+}
+
+.side-nav-contents{
+    padding-top: 1rem;
+    position: fixed;
+    padding: 2rem;
+    width: inherit;
+}
+
+.side-nav > div > .logo-container > p{
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--light);
+    margin-bottom: 1rem;
+}
+
+.side-nav > div > .logo-container > p > span{
+    color: var(--theme-blue);
+}
+
+.side-nav li{
+    margin: 1rem 0;
+}
+
+.side-nav a{
+
+    color: var(--grey);
+    padding: .45rem;
+    display: block;
+}
+
+.side-nav .navlink_icon{
+    margin-right: 1rem;
+}
+
+.side-nav a.active{
+    color: white;
+    background-color: rgba(0,0,0, .4);
+    border-left: 4px solid white;
+}
+
+.side-nav a:hover{
+    background-color: rgba(0,0,0, .17);
+
+}

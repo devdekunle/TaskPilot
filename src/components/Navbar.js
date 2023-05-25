@@ -63,8 +63,8 @@ const Navbar = () => {
         </ul>
 
         <div className="navbar-login">
-          <FontAwesomeIcon icon={faSignIn} className="login-icon" />
           <NavLink to={"/auth"} onClick={toogleNav}>
+          <FontAwesomeIcon icon={faSignIn} className="navlink_icon" />
             login / sign up
           </NavLink>
         </div>

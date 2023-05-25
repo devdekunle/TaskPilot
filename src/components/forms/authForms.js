@@ -23,14 +23,7 @@ export const Login = ({ onClick }) => {
             .required("Required"),
           password: Yup.string().required("Password is required"),
         })}
-        // Handle Login Form Submition
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-          }, 400);
-          toast.success("Login Successful");
-        }}
+      
       >
         <Form className="form-container">
           <div className="login-form">

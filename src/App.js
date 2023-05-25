@@ -1,12 +1,17 @@
-import LandingPage from "./layouts/LandingPage";
-import Navbar from "./components/Navbar";
+import { useState } from "react";
 import { ToastContainer } from "react-toastify";
+import { RouterProvider } from "react-router-dom";
+import { unProtectedRoutes, ProtectedRoutes } from "./router/routes";
 
 function App() {
+  const [user, setUser] = useState(true);
   return (
     <div style={{ position: "relative" }}>
-      <Navbar></Navbar>
-      <LandingPage />
+      {user ? (
+        <RouterProvider router={ProtectedRoutes} />
+      ) : (
+        <RouterProvider router={unProtectedRoutes} />
+      )}
       <ToastContainer />
     </div>
   );

@@ -1,0 +1,57 @@
+
+.accordion{
+    position: relative;
+   
+}
+
+.accordion-toogle{
+    font-size: 1.5rem;
+    top: 0;
+    left: 0;
+    transform: translate(0, -35%);
+    background-color: var(--light);
+    display: inline-block;
+    padding-right: .5rem;
+    cursor: pointer;
+    position: absolute;
+}
+
+.angle{
+    
+    transform: rotateX(180deg);
+}
+
+
+
+.accordion-title{
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 5rem;
+    transform: translateY(-50%);
+    background-color: var(--light);
+    padding: 0 .5rem;
+}
+
+.accordion-title >span{
+    margin-left: .5rem;
+}
+
+.accordion-body{
+    width: 100%;
+    border: 3px solid #aaa;
+    border-right: none;
+    border-left: none;
+    height: 0px;
+    margin: 1rem 0;
+    transition: all .5s linear;
+    overflow: scroll;
+}
+
+.accordion-open{
+    height: 400px;
+}
+
+.accordion-close{
+    height: 0;
+}

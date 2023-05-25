@@ -1,6 +1,10 @@
 .auth .form-container{
     width: 80%;
-    margin: 0 auto;
+    overflow: hidden;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 
@@ -13,7 +17,7 @@
     background-color: var(--theme-dark);
     padding: 1rem;
     border-radius: .25rem;
-    box-shadow: 0 0 12px 3px rgba(0, 0, 0, .3);    
+    box-shadow: 0 0 12px 3px rgba(0, 0, 0, .3); 
 }
 
 .heading{

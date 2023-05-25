@@ -1,0 +1,33 @@
+.projects{
+    flex: 1;
+    padding: 2rem;
+    padding-top: 4rem;
+    display: flex;
+    /* justify-content: space-between; */
+    flex-wrap: wrap;
+    position: relative;
+    margin-top: 70px;
+    width: 100%;
+
+}
+
+.add_project_btn{
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    background-color: var(--theme-blue);
+    padding: .5rem 2rem;
+    color: var(--theme-light)
+}
+
+.projects > div.filter{
+    position: absolute;
+    top: 1rem
+}
+
+.projects > div.filter  select{
+    border: 1px solid grey;
+    outline: none;
+    width: 200px;
+    padding: .25rem;
+}
