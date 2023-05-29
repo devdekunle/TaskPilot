@@ -2,10 +2,7 @@
 """
 authentication and user validation
 """
-from flask import Blueprint, make_response, request, jsonify, abort
-from flask.views import MethodView
-from models import storage
-from models.user import User
+from flask import Blueprint
 
 authentication_blueprint = Blueprint("auth", __name__)
 

@@ -7,15 +7,15 @@ from flask_mail import Mail, Message
 mail = Mail()
 
 
-def email_verify(subject='', link=None, token='', sender='', recipients=[], text_body=''):
+def email_verify(subject=None, link=None, token=None, sender=None, recipients=[], text_body=None):
     """
     function to send messages to users
     """
-    msg = Message(subject, sender, recipients)
+    msg = Message(subject, sender=sender, recipients=recipients)
     msg.body = text_body.format(link)
     mail.send(msg)
     response = {
         'status': 'Success',
-        'message': 'mail successfully sent'
+        'message': 'Verification mail successfully sent'
     }
     return response

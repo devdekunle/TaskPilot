@@ -4,6 +4,7 @@ create model for user class
 """
 import os
 from models.base_model import BaseModel, Base
+from models.token_blacklist import BlackToken
 from sqlalchemy import Column, String, ForeignKey, Integer, Table, Boolean
 from sqlalchemy.orm import relationship
 import datetime
@@ -47,8 +48,8 @@ class User(BaseModel, Base):
         """
         try:
             payload = {
-                'sub': user_id,
-                'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=5),
+                'user_id': user_id,
+                'exp' : datetime.datetime.utcnow() + datetime.timedelta(hours=24),
                 'iat' : datetime.datetime.utcnow()
                 }
             return jwt.encode(
@@ -65,11 +66,15 @@ class User(BaseModel, Base):
         """
         decodes the authentication token
         args: auth_token
-        return: string
+        return: string or dictionary
         """
         try:
             payload = jwt.decode(auth_token, SECRET_KEY)
-            return payload['sub']
+            blacklisted_token = BlackToken.check_blacklist(auth_token)
+            if blacklisted_token:
+                return 'Token is blacklisted. Login again'
+            else:
+                return payload
         except jwt.ExpiredSignatureError:
             return "Token expired, please log in again"
         except jwt.InvalidTokenError:

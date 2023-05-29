@@ -14,16 +14,19 @@ from models.task import Task
 from models.sub_task import SubTask
 from models.project_comment import ProjectComment
 from models.task_comment import TaskComment
+from models.token_blacklist import BlackToken
 from models.subtask_comment import SubTaskComment
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+
 
 model_classes = {'user': User, 'project': Project, 'task': Task,
                 'sub_task': SubTask, 'project_comment': ProjectComment,
                 'task_comment': TaskComment,
                 'sub_task_comment': SubTaskComment,
                 'projectuser': ProjectUser, 'taskuser': TaskUser,
-                'subtaskuser':SubTaskUser}
+                'subtaskuser':SubTaskUser,
+                'blacklist_token': BlackToken}
 
 class DataStorage:
     """ create and interact with databaase storage engine"""
@@ -93,3 +96,8 @@ class DataStorage:
         obj = self.__session.query(User).filter_by(email_address=email).first()
         return obj
 
+    def get_token(self, token=None):
+        if token is None:
+            return None
+
+        return self.__session.query(BlackToken).filter_by(token=token).first()

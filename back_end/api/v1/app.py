@@ -9,7 +9,7 @@ from auth.email_utils import mail
 
 app = Flask(__name__)
 
-app.config.from_pyfile('config.cfg')
+app.config.from_pyfile('config.py')
 app.register_blueprint(authentication_blueprint, url_prefix='/auth')
 
 mail.init_app(app)
