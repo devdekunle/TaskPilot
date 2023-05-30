@@ -64,3 +64,7 @@ class BaseModel:
     def save(self):
         models.storage.new(self)
         models.storage.save()
+
+    def update(self):
+        self.update_time = datetime.utcnow()
+        models.storage.save()
