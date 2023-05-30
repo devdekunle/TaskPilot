@@ -4,13 +4,15 @@ api application instance
 """
 from flask import Flask
 from flask_mail import Mail, Message
-from auth import authentication_blueprint
+from auth.auth_views import authentication_blueprint
+from api.v1.views import api_blueprint
 from auth.email_utils import mail
 
 app = Flask(__name__)
 
 app.config.from_pyfile('config.py')
 app.register_blueprint(authentication_blueprint, url_prefix='/auth')
+app.register_blueprint(api_blueprint, url_prefix='/api/v1')
 
 mail.init_app(app)
 

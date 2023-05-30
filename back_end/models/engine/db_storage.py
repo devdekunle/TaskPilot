@@ -85,7 +85,7 @@ class DataStorage:
             return None
 
         all_obj = models.storage.all(cls)
-        for obj in all_obj.values:
+        for obj in all_obj.values():
             if obj.id == id:
                 return obj
 
