@@ -25,7 +25,7 @@ def user_status(f):
                             user_data.get('user_id', None))
 
                 # return current user
-                return f(current_user, *args, *kwargs)
+                return f(current_user, *args, **kwargs)
             else:
                 response = {
                     'status': 'fail',

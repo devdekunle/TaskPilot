@@ -61,10 +61,9 @@ class DataStorage:
         for model in model_classes.values():
             if cls is model or cls is None:
                 objs = self.__session.query(model).all()
-
-            for obj in objs:
-                key = "{}.{}".format(obj.__class__.__name__, obj.id)
-                new_dict[key] = obj
+                for obj in objs:
+                    key = "{}.{}".format(obj.__class__.__name__, obj.id)
+                    new_dict[key] = obj
 
         return new_dict
 
@@ -85,9 +84,11 @@ class DataStorage:
             return None
 
         all_obj = models.storage.all(cls)
-        for obj in all_obj.values():
-            if obj.id == id:
-                return obj
+        for value in all_obj.values():
+            if value.id == id:
+                return value
+
+        return None
 
     def get_user(self, email=None):
         if email is None:
