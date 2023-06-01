@@ -38,7 +38,8 @@ class Login(MethodView):
                     response = {
                         'status': 'Success',
                         'message': 'Login successful',
-                        'auth_token': auth_token.decode('UTF-8')
+                        'auth_token': auth_token.decode('UTF-8'),
+                        'user_details': current_user.to_dict()
                         }
                     return make_response(jsonify(response)), 200
                 else:
