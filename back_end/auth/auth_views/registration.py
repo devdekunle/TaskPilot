@@ -43,6 +43,7 @@ class Register(MethodView):
                         algorithm='HS256'
 
                         )
+                    print(type(auth_token))
                     # create email verification link
                     link = url_for('auth.verify_email_view', token=auth_token.decode('utf-8'),
                                _external=True)

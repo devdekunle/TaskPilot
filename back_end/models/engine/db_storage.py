@@ -102,3 +102,8 @@ class DataStorage:
             return None
 
         return self.__session.query(BlackToken).filter_by(token=token).first()
+
+    def close(self):
+        """ remove the current private session"""
+        self.__session.remove()
+

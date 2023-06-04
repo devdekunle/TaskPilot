@@ -10,16 +10,12 @@ class ProjectUser(BaseModel, Base):
 
     __tablename__ = "project_user"
 
-    user_id = Column(String(60), ForeignKey('users.id', onupdate='CASCADE',
-                                        ondelete='CASCADE'))
-    project_id = Column(String(60), ForeignKey('projects.id', onupdate='CASCADE',
-                                    ondelete='CASCADE'))
+    user_id = Column(String(60), ForeignKey('users.id'))
+    project_id = Column(String(60), ForeignKey('projects.id'))
     member_role = Column(String(60))
 
-    user = relationship('User', back_populates='projects',
-                        cascade='all, delete')
-    project = relationship('Project', back_populates='members',
-                           cascade='all, delete')
+    user = relationship('User', back_populates='projects')
+    project = relationship('Project', back_populates='members')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

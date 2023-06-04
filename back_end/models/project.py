@@ -16,8 +16,7 @@ class Project(BaseModel, Base):
     completed = Column(Boolean, default=False)
     description = Column(String(1024), nullable=True)
     status = Column(String(60), default='pending')
-    members = relationship('ProjectUser', back_populates='project',
-                            cascade='all, delete')
+    members = relationship('ProjectUser', back_populates='project')
 
     tasks = relationship('Task', back_populates='projects',
                         cascade='all, delete, delete-orphan')

@@ -59,7 +59,12 @@ def user_projects(current_user):
     retrieve all projects that the user is a part of
     """
     all_projects = [project.project.to_dict() for project in current_user.projects]
-    return make_response(jsonify(all_projects)), 200
+    projects_count = len(all_projects)
+    projects_stats = {
+        "projects": all_projects,
+        "projects_count": projects_count
+    }
+    return make_response(jsonify(projects_stats)), 200
 
 
 @api_blueprint.route('/users/<user_id>/projects/<project_id>', methods=['DELETE'])
@@ -77,7 +82,7 @@ def delete_project(current_user, user_id, project_id):
                 'status': 'fail',
                 'message': 'Project doesn\'t exist'
             }
-            return make_response(jsonify(response)), 400
+            return make_response(jsonify(response)), 404
     else:
         return(make_response(jsonify({'error': 'project_id missing'}))), 404
 
@@ -86,21 +91,22 @@ def delete_project(current_user, user_id, project_id):
 
     # check if member is permitted to delete
     for p_u in all_p_u:
-        if p_u.user_id == user_id and p_u.project.id == project_id:
-            if p_u.member_role == 'admin' or p_u.member_role == 'owner':
+        # check association table for user and project
+        if p_u.project.id == project_id:
+            # check user role
+            if p_u.user_id == user_id and p_u.member_role == 'admin' or \
+                p_u.member_role == 'owner':
                 current_user.projects.remove(p_u)
                 storage.delete(p_u)
-                storage.delete(project)
-                storage.save()
-                return make_response(jsonify({'status': 'Project deleted'})), 200
             else:
                 return make_response(jsonify({'error': 'Permission denied'})), 403
+
         else:
-            response = {
-                'status': 'fail',
-                'message': 'You are not a part of this project'
-                }
-            return make_response(jsonify(response)), 404
+            continue
+    storage.delete(project)
+    storage.save()
+    return make_response(jsonify({'status': 'Project deleted'})), 200
+
 
 
 @api_blueprint.route('/users/<user_id>/projects/<project_id>', methods=['PUT'])
@@ -118,7 +124,7 @@ def update_project(current_user, user_id, project_id):
                 'status': 'fail',
                 'message': 'Project doesn\'t exist'
             }
-            return make_response(jsonify(response)), 400
+            return make_response(jsonify(response)), 404
     else:
         return make_response(jsonify({'error': 'project_id missing'}))
 
@@ -128,6 +134,14 @@ def update_project(current_user, user_id, project_id):
         if obj.user_id == user_id and obj.project_id == project.id:
            p_u = obj
            break
+    else:
+        response = {
+
+            'Status': 'Fail',
+            'Message': 'User records not associated with this project'
+        }
+        return make_response(jsonify(response)), 404
+
     # check if member of project is permitted to update project
     if p_u.member_role == 'owner' or p_u.member_role == 'admin':
         # get the json data
@@ -167,15 +181,9 @@ def get_one_project(current_user, project_id):
             project = storage.get(Project, project_id)
             if project:
                 for p_u in all_pu_obj:
+                    # check association for project
                     if p_u.project_id == project_id:
                         return make_response(jsonify(project.to_dict())), 200
-                    else:
-                        response = {
-                            'status': 'fail',
-                            'message': 'No project found'
-                        }
-                        return make_response(jsonify(response)), 404
-
             else:
                 response = {
                     'status': 'fail',
