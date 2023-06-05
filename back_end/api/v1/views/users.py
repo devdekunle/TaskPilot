@@ -43,7 +43,7 @@ def get_project_member(current_user, user_id, project_id):
     if project:
         all_p_u = project.members
         for p_u in all_p_u:
-            if p_u.user_id == user_id:
+            if p_u.user_id == user_id and p_u.project_id == project_id:
                 return make_response(jsonify(p_u.user.to_dict())), 200
         else:
             response = {
@@ -69,3 +69,22 @@ def get_task_members(current_user, task_id):
 
         }
         return make_response(jsonify(task)), 404
+
+@api_blueprint.route('/users/<user_id>/tasks/<task_id>', methods=['GET'])
+@user_status
+def get_project_member(current_user, user_id, task_id):
+    """
+    get a particular user from a project
+    """
+    Task = storage.get(Task, task_id)
+    if task:
+        all_t_u = task.members
+        for t_u in all_t_u:
+            if t_u.user_id == user_id and t_u.task_id == task_id:
+                return make_response(jsonify(t_u.user.to_dict())), 200
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'Task not found'
+            }
+            return make_response(jsonify(response)), 404
