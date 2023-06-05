@@ -74,10 +74,13 @@ def get_task_subtasks(current_user, task_id):
     get the tasks for a project
     """
     all_s_u = current_user.subtasks
+    subtasks = []
     if all_s_u is not None:
-        list_subtask = [s_u.subtask.to_dict() for s_u in current_user.subtasks \
-                if s_u.subtask.task_id == task_id]
-    return make_response(jsonify(list_subtask)), 200
+        for s_u in all_s_u:
+            if s_u.subtask.task_id == task_id:
+                subtasks.append(s_u.subtask.to_dict())
+        return make_response(jsonify(subtasks)), 200
+
 @api_blueprint.route('/subtasks/<subtask_id>', methods=['GET'])
 @user_status
 def get_subtask(current_user, subtask_id):

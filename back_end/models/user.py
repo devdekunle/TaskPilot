@@ -20,9 +20,12 @@ class User(BaseModel, Base):
     last_name = Column(String(255), nullable=False)
     email_address = Column(String(255), nullable=False, unique=True)
     password = Column(String(255), nullable=False)
-    projects = relationship("ProjectUser", back_populates='user',)
-    tasks = relationship("TaskUser", back_populates='user')
-    subtasks = relationship('SubTaskUser', back_populates='user')
+    projects = relationship("ProjectUser", back_populates='user',
+                            cascade='all, delete')
+    tasks = relationship("TaskUser", back_populates='user',
+                         cascade='all, delete, delete-orphan')
+    subtasks = relationship('SubTaskUser', back_populates='user',
+                            cascade='all, delete, delete-orphan')
     project_comments = relationship('ProjectComment',
                                     backref='members',
                                     cascade='all, delete, delete-orphan')

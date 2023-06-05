@@ -23,7 +23,8 @@ class Task(BaseModel, Base):
                             cascade='all, delete, delete-orphan')
     comments = relationship("TaskComment", backref='tasks',
                             cascade='all, delete, delete-orphan')
-    members = relationship("TaskUser", back_populates='task')
+    members = relationship("TaskUser", back_populates='task',
+                           cascade='all, delete')
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)

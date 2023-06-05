@@ -21,6 +21,7 @@ class SubTask(BaseModel, Base):
     tasks = relationship("Task", back_populates='subtasks')
     comments = relationship("SubTaskComment", backref='subtasks',
                             cascade='all, delete, delete-orphan')
-    members = relationship("SubTaskUser", back_populates='subtask')
+    members = relationship("SubTaskUser", back_populates='subtask',
+                           cascade='all, delete')
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
