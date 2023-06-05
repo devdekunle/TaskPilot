@@ -175,7 +175,7 @@ def update_task(current_user, task_id, user_id):
 
         for key, value in task_data.items():
             # set updated attributes
-            if key not in ['id', 'create_at', 'update_at']:
+            if key not in ['id', 'create_at', 'update_at', 'project_id']:
                 setattr(task, key, value)
 
         # update update_time
