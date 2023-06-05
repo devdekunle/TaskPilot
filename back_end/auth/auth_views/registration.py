@@ -67,7 +67,7 @@ class Register(MethodView):
                     'status': 'fail',
                     'message': 'Email already exists'
                 }
-                return make_response(jsonify(response)), 202
+                return make_response(jsonify(response)), 400
         else:
             response = {
                 'status': 'fail',
@@ -88,7 +88,7 @@ class Register(MethodView):
 
                     #blacklist token after user signs up
                     blacklist_token = BlackToken(token=token)
-                    blacklist_token.save()
+                    blacklist_tok:en.save()
 
                     # create new user in database
                     new_user = User(**user_data)

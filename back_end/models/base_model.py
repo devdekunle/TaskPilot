@@ -56,6 +56,8 @@ class BaseModel:
         new_dict["update_time"] = new_dict["update_time"].strftime(time)
         if "_sa_instance_state" in new_dict:
             del new_dict['_sa_instance_state']
+        if "password" in new_dict:
+            del new_dict["password"]
         return new_dict
 
     def delete(self):
