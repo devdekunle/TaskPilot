@@ -4,6 +4,7 @@ get all users
 """
 from models import storage
 from models.user import User
+from models.task import Task
 from models.project import Project
 from models.project_user import ProjectUser
 from auth.current_user import user_status
@@ -51,3 +52,20 @@ def get_project_member(current_user, user_id, project_id):
             }
             return make_response(jsonify(response)), 404
 
+@api_blueprint.route('/users/tasks/<task_id>', methods=['GET'])
+@user_status
+def get_task_members(current_user, task_id):
+    """
+    Get all members in a task
+    """
+    task = storage.get(Task, task_id)
+    if task:
+        task_members = [t_u.user.to_dict() for t_u in task.members]
+        return make_response(jsonify(task_members)), 200
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'Task not found'
+
+        }
+        return make_response(jsonify(task)), 404
