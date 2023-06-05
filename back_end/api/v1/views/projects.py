@@ -67,9 +67,9 @@ def user_projects(current_user):
     return make_response(jsonify(projects_stats)), 200
 
 
-@api_blueprint.route('/users/<user_id>/projects/<project_id>', methods=['DELETE'])
+@api_blueprint.route('/projects/<project_id>/users/<user_id>', methods=['DELETE'])
 @user_status
-def delete_project(current_user, user_id, project_id):
+def delete_project(current_user, project_id, user_id):
     """
     delete a project only permitted by an admin or owner
     """
@@ -109,9 +109,9 @@ def delete_project(current_user, user_id, project_id):
 
 
 
-@api_blueprint.route('/users/<user_id>/projects/<project_id>', methods=['PUT'])
+@api_blueprint.route('/projects/<project_id>/users/<user_id>', methods=['PUT'])
 @user_status
-def update_project(current_user, user_id, project_id):
+def update_project(current_user, project_id, user_id):
     """
     update a property of a project based on a permitted user
     """

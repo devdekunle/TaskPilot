@@ -11,7 +11,7 @@ from api.v1.views import api_blueprint
 from models.task_user import TaskUser
 
 
-@api_blueprint.route('/projects/<project_id>/users/<user_id>/task', methods=['POST'])
+@api_blueprint.route('/projects/<project_id>/users/<user_id>/tasks', methods=['POST'])
 @user_status
 def create_task(current_user, project_id, user_id):
     """
@@ -189,14 +189,40 @@ def update_task(current_user, task_id, user_id):
         }
         return make_response(jsonify(response)), 403
 
-"""
-@api_blueprint.route('/tasks/<task_id>', methods=['DELETE'])
+
+@api_blueprint.route('/tasks/<task_id>/users/<user_id>', methods=['DELETE'])
 @user_status
-def delete_task(current_user, task_id):
-    
+def delete_task(current_user, task_id, user_id):
+    """
     delete a task
-    
+    """
     if task_id:
-        all_tasks = current_user.tasks
-        if all_tasks is not None:
-"""
+        all_t_u = current_user.tasks
+        task = storage.get(Task, task_id)
+        if not task:
+            response = {
+                'Status': 'Fail',
+                'Message': 'Task doesn\'t exist'
+            }
+            return make_response(jsonify(response)), 404
+
+        for t_u in all_t_u:
+            if t_u.task_id == task_id:
+                if t_u.user_id == user_id and t_u.member_role == 'admin':
+                    current_user.tasks.remove(t_u)
+                    storage.delete(t_u)
+                else:
+                    response = {
+                        'Status': 'Fail',
+                        'Message': 'Permission Denied'
+                    }
+                    return make_response(jsonify(response)), 403
+            else:
+                continue
+        storage.delete(task)
+        storage.save()
+        response = {
+            'Status': 'Success',
+            'Message': 'Task deleted'
+        }
+        return make_response(jsonify(response)), 200
