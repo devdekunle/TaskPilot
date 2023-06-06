@@ -12,44 +12,45 @@ from flask.views import MethodView
 from api.v1.views import api_blueprint
 
 
-@api_blueprint.route('/projects', methods=['POST'])
+@api_blueprint.route('/projects/users/<user_id>', methods=['POST'])
 @user_status
-def create_project(current_user):
+def create_project(current_user, user_id):
     """
     create a new project for the user
     """
+    if user_id == current_user.id:
+        #get json data
+        project_data = request.get_json()
+        if not project_data:
+            abort(404)
 
-    #get json data
-    project_data = request.get_json()
-    if not project_data:
-        abort(404)
+        if 'title' not in project_data:
+            response = {
+                'status': "fail",
+                'message': 'Title is missing'
+            }
+            return make_response(jsonify(response)), 404
 
-    if 'title' not in project_data:
-        response = {
-            'status': "fail",
-            'message': 'Title is missing'
-        }
-        return make_response(jsonify(response)), 404
+        # create new project in database
+        new_project = Project(**project_data)
+        new_project.save()
 
-    # create new project in database
-    new_project = Project(**project_data)
-    new_project.save()
+        # create association table between project and users
+        p_u = ProjectUser(user_id=current_user.id,
+                project_id=new_project.id, member_role='owner')
 
-    # create association table between project and users
-    p_u = ProjectUser(user_id=current_user.id,
-            project_id=new_project.id, member_role='owner')
+        # add association table to projects of current user
+        if p_u not in current_user.projects:
+            current_user.projects.append(p_u)
+            return_dict = new_project.to_dict()
+            new_project.members.append(p_u)
 
-    # add association table to projects of current user
-    if p_u not in current_user.projects:
-        current_user.projects.append(p_u)
-        return_dict = new_project.to_dict()
-        new_project.members.append(p_u)
+        # commit the changes to the database
+        storage.save()
 
-    # commit the changes to the database
-    storage.save()
-
-    return make_response(jsonify(return_dict)), 201
-
+        return make_response(jsonify(return_dict)), 201
+    else:
+        return make_response(jsonify({'Error': 'Permission Denied'})), 403
 
 @api_blueprint.route('/projects', methods=['GET'])
 @user_status

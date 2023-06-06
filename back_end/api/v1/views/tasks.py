@@ -17,7 +17,7 @@ def create_task(current_user, project_id, user_id):
     """
     create a task for a project
     """
-    if current_user:
+    if current_user.id:
         task_data = request.get_json()
         if not task_data:
             abort(404)
@@ -52,7 +52,7 @@ def create_task(current_user, project_id, user_id):
 
             # create user and task association
             t_u = TaskUser(task_id=new_task.id,
-                     user_id=user_id, member_role='admin')
+                     user_id=user_id, member_role='team_lead')
 
             if t_u not in current_user.tasks:
                 current_user.tasks.append(t_u)
@@ -61,12 +61,12 @@ def create_task(current_user, project_id, user_id):
 
                 storage.save()
                 return make_response(jsonify(return_dict)), 201
-            else:
-                response = {
-                'status': 'Fail',
-                'message': 'Permission denied'
-                }
-                return make_response(jsonify(response)), 403
+        else:
+            response = {
+            'status': 'Fail',
+            'message': 'Permission denied'
+            }
+            return make_response(jsonify(response)), 403
 @api_blueprint.route('/projects/<project_id>/tasks', methods=['GET'])
 @user_status
 def get_project_tasks(current_user, project_id):
@@ -207,8 +207,8 @@ def delete_task(current_user, task_id, user_id):
             return make_response(jsonify(response)), 404
 
         for t_u in all_t_u:
-            if t_u.task_id == task_id:
-                if t_u.user_id == user_id and t_u.member_role == 'admin':
+            if t_u.task_id == task_id and t_u.user_id == user_id:
+                if t_u.member_role == 'team_lead' or t_u.user_id == current_user.id:
                     current_user.tasks.remove(t_u)
                     storage.delete(t_u)
                 else:
