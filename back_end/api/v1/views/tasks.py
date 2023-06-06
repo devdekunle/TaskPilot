@@ -11,13 +11,14 @@ from api.v1.views import api_blueprint
 from models.task_user import TaskUser
 
 
-@api_blueprint.route('/projects/<project_id>/users/<user_id>/tasks', methods=['POST'])
+@api_blueprint.route('/projects/<project_id>/users/<user_id>/tasks',
+                    methods=['POST'])
 @user_status
 def create_task(current_user, project_id, user_id):
     """
     create a task for a project
     """
-    if current_user.id:
+    if current_user:
         task_data = request.get_json()
         if not task_data:
             abort(404)
@@ -67,6 +68,7 @@ def create_task(current_user, project_id, user_id):
             'message': 'Permission denied'
             }
             return make_response(jsonify(response)), 403
+
 @api_blueprint.route('/projects/<project_id>/tasks', methods=['GET'])
 @user_status
 def get_project_tasks(current_user, project_id):
@@ -78,6 +80,7 @@ def get_project_tasks(current_user, project_id):
         list_task = [t_u.task.to_dict() for t_u in current_user.tasks \
                 if t_u.task.project_id == project_id]
     return make_response(jsonify(list_task)), 200
+
 @api_blueprint.route('/tasks/<task_id>', methods=['GET'])
 @user_status
 def get_task(current_user, task_id):
@@ -188,7 +191,6 @@ def update_task(current_user, task_id, user_id):
 
         }
         return make_response(jsonify(response)), 403
-
 
 @api_blueprint.route('/tasks/<task_id>/users/<user_id>', methods=['DELETE'])
 @user_status
