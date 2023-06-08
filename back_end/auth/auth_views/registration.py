@@ -12,7 +12,7 @@ import jwt
 from flask_bcrypt import check_password_hash
 import datetime
 import uuid
-from auth.email_utils import mail, Message, email_verify
+from auth.email_utils import mail, Message, send_mail
 from functools import wraps
 
 pending_users = {}
@@ -34,6 +34,7 @@ class Register(MethodView):
                     pending_user_id = str(uuid.uuid4())
                     pending_users[pending_user_id] = user_data
                     # generate token using email
+                    print(SECRET_KEY)
                     auth_token = jwt.encode(
                         {'email_address': user_data['email_address'],
                         'user_id': pending_user_id,
@@ -43,13 +44,12 @@ class Register(MethodView):
                         algorithm='HS256'
 
                         )
-                    print(type(auth_token))
                     # create email verification link
                     link = url_for('auth.verify_email_view', token=auth_token.decode('utf-8'),
                                _external=True)
                     # send verification mail
 
-                    mail_response = email_verify(subject='Confirm Email Address',
+                    mail_response = send_mail(subject='Confirm Email Address',
                         sender='taskpilot0@gmail.com',
                         recipients=[user_data['email_address']],
                         text_body='Please click the link to verify your email {}',
@@ -88,7 +88,7 @@ class Register(MethodView):
 
                     #blacklist token after user signs up
                     blacklist_token = BlackToken(token=token)
-                    blacklist_tok:en.save()
+                    blacklist_token.save()
 
                     # create new user in database
                     new_user = User(**user_data)

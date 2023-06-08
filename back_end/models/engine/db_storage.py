@@ -16,6 +16,7 @@ from models.project_comment import ProjectComment
 from models.task_comment import TaskComment
 from models.token_blacklist import BlackToken
 from models.subtask_comment import SubTaskComment
+from models.invitation import Invitation
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
@@ -26,7 +27,7 @@ model_classes = {'user': User, 'project': Project, 'task': Task,
                 'sub_task_comment': SubTaskComment,
                 'projectuser': ProjectUser, 'taskuser': TaskUser,
                 'subtaskuser':SubTaskUser,
-                'blacklist_token': BlackToken}
+                'blacklist_token': BlackToken, 'invitation': Invitation}
 
 class DataStorage:
     """ create and interact with databaase storage engine"""
@@ -90,6 +91,11 @@ class DataStorage:
 
         return None
 
+    def get_invite(self, recipient_email=None):
+        if recipient_email is None:
+            return None
+        return self.__session.query(Invitation).filter_by(recipient_email=recipient_email).first()
+
     def get_user(self, email=None):
         if email is None:
            return None
@@ -107,3 +113,5 @@ class DataStorage:
         """ remove the current private session"""
         self.__session.remove()
 
+    def expunge(self, obj=None):
+        self.__session.expunge(obj)

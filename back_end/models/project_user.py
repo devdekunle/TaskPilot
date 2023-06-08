@@ -10,8 +10,10 @@ class ProjectUser(BaseModel, Base):
 
     __tablename__ = "project_user"
 
-    user_id = Column(String(60), ForeignKey('users.id'))
-    project_id = Column(String(60), ForeignKey('projects.id'))
+    user_id = Column(String(60), ForeignKey('users.id'),
+                    primary_key=True)
+    project_id = Column(String(60), ForeignKey('projects.id'),
+                        primary_key=True)
     member_role = Column(String(60))
 
     user = relationship('User', back_populates='projects')

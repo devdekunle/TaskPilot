@@ -8,8 +8,10 @@ from sqlalchemy.orm import relationship
 
 class TaskUser(BaseModel, Base):
     __tablename__ = "task_user"
-    user_id = Column(String(60), ForeignKey('users.id'))
-    task_id = Column(String(60), ForeignKey('tasks.id'))
+    user_id = Column(String(60), ForeignKey('users.id'),
+                    primary_key=True)
+    task_id = Column(String(60), ForeignKey('tasks.id'),
+                    primary_key=True)
     member_role = Column(String(60))
 
     user = relationship('User', back_populates='tasks')

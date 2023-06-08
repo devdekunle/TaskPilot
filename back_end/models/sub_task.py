@@ -3,6 +3,7 @@
 module for tasks under a project
 """
 from models.base_model import BaseModel, Base
+from models.subtask_user import SubTaskUser
 from sqlalchemy import Column, String, Integer, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
@@ -22,6 +23,7 @@ class SubTask(BaseModel, Base):
     comments = relationship("SubTaskComment", backref='subtasks',
                             cascade='all, delete, delete-orphan')
     members = relationship("SubTaskUser", back_populates='subtask',
-                           cascade='all, delete')
+                           cascade='all, delete',
+                           foreign_keys=[SubTaskUser.subtask_id])
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

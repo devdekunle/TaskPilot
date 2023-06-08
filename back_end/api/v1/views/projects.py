@@ -37,7 +37,7 @@ def create_project(current_user, user_id):
 
         # create association table between project and users
         p_u = ProjectUser(user_id=current_user.id,
-                project_id=new_project.id, member_role='owner')
+                project_id=new_project.id, member_role='admin')
 
         # add association table to projects of current user
         if p_u not in current_user.projects:
@@ -95,8 +95,7 @@ def delete_project(current_user, project_id, user_id):
         # check association table for user and project
         if p_u.project.id == project_id:
             # check user role
-            if p_u.user_id == user_id and p_u.member_role == 'admin' or \
-                p_u.member_role == 'owner':
+            if p_u.user_id == user_id and p_u.member_role == 'admin':
                 current_user.projects.remove(p_u)
                 storage.delete(p_u)
             else:
@@ -144,7 +143,7 @@ def update_project(current_user, project_id, user_id):
         return make_response(jsonify(response)), 404
 
     # check if member of project is permitted to update project
-    if p_u.member_role == 'owner' or p_u.member_role == 'admin':
+    if p_u.member_role == 'admin':
         # get the json data
         data = request.get_json()
 

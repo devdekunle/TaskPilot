@@ -10,6 +10,6 @@ authentication_blueprint = Blueprint("auth", __name__)
 from auth.auth_views.registration import *
 from auth.auth_views.login import *
 from auth.auth_views.logout import *
-
+from auth.auth_views.invitation import *
 
 

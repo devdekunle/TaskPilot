@@ -12,7 +12,7 @@ import jwt
 from flask_bcrypt import check_password_hash
 import datetime
 import uuid
-from auth.email_utils import mail, Message, email_verify
+from auth.email_utils import mail, Message, send_mail
 from functools import wraps
 
 class Login(MethodView):

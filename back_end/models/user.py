@@ -4,13 +4,16 @@ create model for user class
 """
 import os
 from models.base_model import BaseModel, Base
+from models.project_user import ProjectUser
+from models.task_user import TaskUser
+from models.subtask_user import SubTaskUser
 from models.token_blacklist import BlackToken
+from api.v1.config import SECRET_KEY
 from sqlalchemy import Column, String, ForeignKey, Integer, Table, Boolean
 from sqlalchemy.orm import relationship
 import datetime
 import jwt
 from flask_bcrypt import generate_password_hash
-SECRET_KEY = "\xa3(\x95\xe6\x7f\xb3\xf1\x85o\xc6\xfe\x05\xe55\xfe|d\xf1\xc4\xe0\x1a\xc5[`S\xcd\xe2\x92~k%\xa7"
 
 class User(BaseModel, Base):
     """ class that defines the users and members of the project"""
@@ -21,11 +24,14 @@ class User(BaseModel, Base):
     email_address = Column(String(255), nullable=False, unique=True)
     password = Column(String(255), nullable=False)
     projects = relationship("ProjectUser", back_populates='user',
-                            cascade='all, delete')
+                            cascade='all, delete',
+                            foreign_keys=[ProjectUser.user_id])
     tasks = relationship("TaskUser", back_populates='user',
-                         cascade='all, delete, delete-orphan')
+                         cascade='all, delete, delete-orphan',
+                         foreign_keys=[TaskUser.user_id])
     subtasks = relationship('SubTaskUser', back_populates='user',
-                            cascade='all, delete, delete-orphan')
+                            cascade='all, delete, delete-orphan',
+                            foreign_keys=[SubTaskUser.user_id])
     project_comments = relationship('ProjectComment',
                                     backref='members',
                                     cascade='all, delete, delete-orphan')
