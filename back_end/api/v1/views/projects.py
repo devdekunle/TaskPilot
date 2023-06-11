@@ -88,7 +88,7 @@ def delete_project(current_user, project_id, user_id):
         return(make_response(jsonify({'error': 'project_id missing'}))), 404
 
     # get association objects between user and projects
-    all_p_u = current_user.projects
+    all_p_u = project.members
 
     # check if member is permitted to delete
     for p_u in all_p_u:

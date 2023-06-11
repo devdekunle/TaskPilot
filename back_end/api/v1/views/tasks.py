@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3p_u.member_role == 'admin
 """
 Task API
 """
@@ -7,6 +7,7 @@ from models.task import Task
 from auth.current_user import user_status
 from flask import make_response, jsonify, request, abort
 from models.user import User
+from models.project import Project
 from api.v1.views import api_blueprint
 from models.task_user import TaskUser
 
@@ -31,43 +32,51 @@ def create_task(current_user, project_id, user_id):
             return make_response(jsonify(response)), 400
 
 
-        # check if member is part of project
-        all_p_u = current_user.projects
-        for p_u in all_p_u:
-            # get the project to create task for
-            if p_u.project_id == project_id:
-                if p_u.user_id == user_id:
-                    break
+        project = storage.get(Project, project_id)
+        if project:
+            # check if member is part of project
+            all_p_u = project.members
+            for p_u in all_p_u:
+                # get the project to create task for
+                if p_u.project_id == project_id:
+                    if p_u.user_id == user_id:
+                        break
+            else:
+                response = {
+                    'status': 'Fail',
+                    'message': 'project and user association not found'
+                }
+                return make_response(jsonify(response)), 404
+
+            if p_u.member_role == 'admin':
+                #create a new task
+                task_data['project_id'] = project_id
+                new_task = Task(**task_data)
+                new_task.save()
+                print(new_task)
+                # create user and task association
+                t_u = TaskUser(task_id=new_task.id,
+                        user_id=user_id, member_role='team_lead')
+
+                if t_u not in current_user.tasks:
+                    current_user.tasks.append(t_u)
+                    return_dict = new_task.to_dict()
+                    new_task.members.append(t_u)
+
+                    storage.save()
+                    return make_response(jsonify(return_dict)), 201
+            else:
+                response = {
+                'status': 'Fail',
+                'message': 'Permission denied'
+                }
+                return make_response(jsonify(response)), 403
         else:
             response = {
-                'status': 'Fail',
-                'message': 'project and user association not found'
+                'Status': 'Fail',
+                'Message': 'Project not found'
             }
             return make_response(jsonify(response)), 404
-
-        if p_u.member_role == 'admin' or p_u.user_id == current_user.id:
-            #create a new task
-            task_data['project_id'] = project_id
-            new_task = Task(**task_data)
-            new_task.save()
-
-            # create user and task association
-            t_u = TaskUser(task_id=new_task.id,
-                     user_id=user_id, member_role='team_lead')
-
-            if t_u not in current_user.tasks:
-                current_user.tasks.append(t_u)
-                return_dict = new_task.to_dict()
-                new_task.members.append(t_u)
-
-                storage.save()
-                return make_response(jsonify(return_dict)), 201
-        else:
-            response = {
-            'status': 'Fail',
-            'message': 'Permission denied'
-            }
-            return make_response(jsonify(response)), 403
 
 @api_blueprint.route('/projects/<project_id>/tasks', methods=['GET'])
 @user_status
@@ -117,12 +126,6 @@ def get_task(current_user, task_id):
                 'Message': 'No tasks created'
             }
             return make_response(jsonify(response)), 400
-    else:
-        response = {
-            'Status': 'Fail',
-            'Message': 'task_id missing'
-        }
-        return make_response(jsonify(response)), 400
 
 @api_blueprint.route('tasks/<task_id>/users/<user_id>',
                         methods=['PUT'])
@@ -131,25 +134,38 @@ def update_task(current_user, task_id, user_id):
     """
     update a task with new attributes
     """
-    if task_id:
         # get task to update from database
-        task = storage.get(Task, task_id)
-        if not task:
-            response = {
-                'status': 'Fail',
-                'message': 'Task not found'
-            }
-            return make_response(jsonify(response)), 404
-    else:
+    task = storage.get(Task, task_id)
+    if not task:
         response = {
             'status': 'Fail',
-            'message': 'task_id missing'
+            'message': 'Task not found'
         }
         return make_response(jsonify(response)), 400
+    task_data = request.get_json()
 
+    if not task_data:
+        response = {
 
-    all_tasks = current_user.tasks
-    for t_u in all_tasks:
+            'status': 'Fail',
+            'message': 'Not a JSON object'
+        }
+        return make_response(jsonify(response)), 400
+    # get project and check if user is part of the project
+    project = storage.get(Project, task.project_id)
+    for p_u in project.members:
+        if p_u.project_id == project.id and p_u.user_id == user_id:
+            break
+
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'User not associated with Project'
+        }
+        return make_response(jsonify(response)), 404
+
+    all_t_u = storage.all(TaskUser).values()
+    for t_u in all_t_u:
         # get user and task association
         if t_u.user_id == user_id and t_u.task_id == task_id:
             task_user = t_u
@@ -163,18 +179,7 @@ def update_task(current_user, task_id, user_id):
         return make_response(jsonify(response)), 404
 
     # check if user making update is permitted
-    if task_user.member_role == 'admin' or \
-        task_user.member_role == 'team_lead' or \
-        user_id == current_user.id:
-        task_data = request.get_json()
-
-        if not task_data:
-            response = {
-
-                'status': 'Fail',
-                'message': 'Not a JSON object'
-            }
-            return make_response(jsonify(response)), 400
+    if task_user.member_role == 'team_lead' or p_u.member_role == 'admin':
 
         for key, value in task_data.items():
             # set updated attributes
@@ -199,7 +204,7 @@ def delete_task(current_user, task_id, user_id):
     delete a task
     """
     if task_id:
-        all_t_u = current_user.tasks
+        # get task to delete
         task = storage.get(Task, task_id)
         if not task:
             response = {
@@ -207,10 +212,22 @@ def delete_task(current_user, task_id, user_id):
                 'Message': 'Task doesn\'t exist'
             }
             return make_response(jsonify(response)), 404
-
-        for t_u in all_t_u:
+        # get the project
+        project = storage.get(Project, task.project_id)
+        for p_u in project.members:
+            # check if user is part of project
+            if p_u.project_id == project.id and p_u.user_id == user_id:
+                break
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'User are not a part of the project'
+            }
+            make_response(jsonify(response)), 404
+        for t_u in task.members:
+            # check if user is part of the task
             if t_u.task_id == task_id and t_u.user_id == user_id:
-                if t_u.member_role == 'team_lead' or t_u.user_id == current_user.id:
+                if t_u.member_role == 'team_lead' or p_u.member_role == 'admin':
                     current_user.tasks.remove(t_u)
                     storage.delete(t_u)
                 else:

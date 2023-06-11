@@ -4,6 +4,8 @@ SubTask API
 """
 from models import storage
 from models.sub_task import SubTask
+from models.task import Task
+from models.project import Project
 from auth.current_user import user_status
 from flask import make_response, jsonify, request, abort
 from models.user import User
@@ -28,24 +30,49 @@ def create_subtask(current_user, task_id, user_id):
                 'Message': 'Title is Missing'
             }
             return make_response(jsonify(response)), 400
-
-
-        # check if member is part of project
-        all_t_u = current_user.tasks
-        for t_u in all_t_u:
-            # get the project to create task for
-            if t_u.task_id == task_id:
-                if t_u.user_id == user_id:
-                    break
+        task = storage.get(Task, task_id)
+        if task:
+            # check if member is part of project
+            all_t_u = task.members
+            for t_u in all_t_u:
+                # get the project to create task for
+                if t_u.task_id == task.id and t_u.user_id == user_id:
+                        break
+            else:
+                response = {
+                    'status': 'Fail',
+                    'message': 'task and user association not found'
+                }
+                return make_response(jsonify(response)), 404
         else:
             response = {
-                'status': 'Fail',
-                'message': 'task and user association not found'
+                'Status': 'Fail',
+                'Message': 'Task not found'
             }
             return make_response(jsonify(response)), 404
 
-        if t_u.member_role == 'admin' or t_u.user_id == current_user.id:
-            #create a new task
+        project = storage.get(Project, task.project_id)
+        if project:
+            for p_u in project.members:
+                if p_u.project_id == project.id and p_u.user_id == user_id:
+                    break
+
+            else:
+                response = {
+                    'Status': 'Fail',
+                    'Message': 'User are not a part of this project'
+                }
+                return make_response(jsonify(response)), 404
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'Project not found'
+            }
+            return make_response(jsonify(response)), 404
+
+
+        if t_u.member_role == 'team_lead' or p_u.member_role == 'admin':
+            #create a new subtask
             subtask_data['task_id'] = task_id
             new_subtask = SubTask(**subtask_data)
             new_subtask.save()
@@ -124,7 +151,7 @@ def get_subtask(current_user, subtask_id):
         }
         return make_response(jsonify(response)), 400
 
-@api_blueprint.route('subtasks/<subtask_id>', methods=['PUT'])
+@api_blueprint.route('/subtasks/<subtask_id>', methods=['PUT'])
 @user_status
 def update_subtask(current_user, subtask_id):
     """
@@ -172,7 +199,6 @@ def delete_subtask(current_user, subtask_id):
     delete a task
     """
     if subtask_id:
-        all_s_u = current_user.subtasks
         subtask = storage.get(SubTask, subtask_id)
         if not subtask:
             response = {
@@ -181,7 +207,7 @@ def delete_subtask(current_user, subtask_id):
             }
             return make_response(jsonify(response)), 404
 
-        for s_u in all_s_u:
+        for s_u in subtask.members:
             if s_u.subtask_id == subtask_id:
                 current_user.subtasks.remove(s_u)
                 storage.delete(s_u)

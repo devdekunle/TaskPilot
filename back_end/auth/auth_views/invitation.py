@@ -5,6 +5,7 @@ module that contains the logic for inviting a user to a project
 from models.user import User, SECRET_KEY
 from models.project import Project
 from models.project_user import ProjectUser
+from models.token_blacklist import BlackToken
 from models import storage
 from models.invitation import Invitation
 from auth.auth_views import authentication_blueprint
@@ -22,37 +23,56 @@ def invite_member(current_user, sender_id, project_id):
     """
     invites a member to a project
     """
-    # check if inviter and project exists
-    user = storage.get(User, sender_id)
-    project = storage.get(Project, project_id)
-    all_p_u = current_user.projects
-    if user and project:
-        for p_u in all_p_u:
-            if p_u.user_id == user.id and p_u.project_id == project.id:
-                break
-        else:
-            response = {
-                'Status': 'Fail',
-                'Message': 'User not associated with project'
-            }
-            return make_response(jsonify(response)), 404
+    invite_data = request.get_json()
+    if not invite_data:
+        abort(400, 'Not a JSON object')
 
-        if p_u.member_role == 'admin' or p_u.user_id == current_user.id:
-            invite_data = request.get_json()
-            if not invite_data:
-                abort(400, 'Not a JSON object')
+    if "recipient_email" not in invite_data:
+        abort(400, " recipient_email missing")
 
-            if "recipient_email" not in invite_data:
-                abort(400, " recipient_email missing")
+    if "member_role" not in invite_data:
+        abort(400, "member_role missing")
 
-            if "member_role" not in invite_data:
-                abort(400, "member_role missing")
+    # check if invitee is current_user
+    if invite_data.get('recipient_email') == current_user.email_address:
+        response = {
+            'Status': 'Fail',
+            'Message': 'This email belongs to this account'
+        }
+        return make_response(jsonify(response)), 400
+    # check if invitee is a registered user
+    existing_user = storage.get_user(invite_data.get('recipient_email', None))
+    if existing_user:
 
-            # check if invitee is a registered user
-            existing_user = storage.get_user(invite_data.get('recipient_email', None))
+        all_p_u = current_user.projects
 
-            #generate invite link
-            if existing_user:
+        # check if inviter and project exists
+        user = storage.get(User, sender_id)
+        project = storage.get(Project, project_id)
+        if user and project:
+            for p_u in all_p_u:
+                # check if user is already a member of the project
+                if p_u.user_id == existing_user.id and p_u.project_id == project_id:
+                    response = {
+                        'Status': 'Fail',
+                        'Message': 'Invitee already a project collaborator'
+                        }
+                    return make_response(jsonify(response)), 400
+            else:
+                all_p_u = current_user.projects
+                for p_u in all_p_u:
+                    # check if invitation is carried out by current user
+                    if p_u.user_id == user.id and p_u.project_id == project.id:
+                        break
+                else:
+                    response = {
+                        'Status': 'Fail',
+                        'Message': 'User not associated with project'
+                    }
+                    return make_response(jsonify(response)), 404
+
+            if p_u.member_role == 'admin' or p_u.user_id == current_user.id:
+
                 try:
                     #generate jwt token
                     auth_token = jwt.encode(
@@ -60,9 +80,9 @@ def invite_member(current_user, sender_id, project_id):
                             "email_address": existing_user.email_address,
                             "user_id": existing_user.id,
                             "exp": datetime.datetime.now() + datetime.timedelta(hours=24)
-                        },
-                        SECRET_KEY,
-                        algorithm='HS256'
+                         },
+                         SECRET_KEY,
+                         algorithm='HS256'
                     )
 
                     invite_data['sender_id'] = user.id
@@ -96,22 +116,20 @@ def invite_member(current_user, sender_id, project_id):
                     return make_response(jsonify(response)), 400
 
             else:
-                pass
+                response = {
+                    'Status': 'Fail',
+                    'Message': 'Permission Denied'
 
+                }
+                return make_response(jsonify(response)), 403
         else:
             response = {
                 'Status': 'Fail',
-                'Message': 'Permission Denied'
-
+                'Message': 'Sender or Project doesn\'t exist'
             }
-            return make_response(jsonify(response)), 403
+            return make_response(jsonify(response)), 404
     else:
-        response = {
-            'Status': 'Fail',
-            'Message': 'Sender or Project doesn\'t exist'
-        }
-        return make_response(jsonify(response)), 404
-
+        pass
 
 @authentication_blueprint.route('/verify_invite/<token>', methods=['GET'])
 @user_status
@@ -122,6 +140,10 @@ def accept_invite(current_user, token):
             payload = User.decode_token(token)
             if type(payload) is not str:
                 invitee = storage.get_invite(payload['email_address'])
+
+                #blacklist token
+                blacklist_token = BlackToken(token=token)
+                blacklist_token.save()
                 if invitee:
                     p_u_data = {
                         'project_id': invitee.project_id,
