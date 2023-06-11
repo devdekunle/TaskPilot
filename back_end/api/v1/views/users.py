@@ -189,8 +189,25 @@ def add_to_task(current_user, user_id, task_id):
     task = storage.get(Task, task_id)
     if task:
         for t_u in task.members:
-            if t_u.task_id ==task.id and t_u.user_id == user_id:
+            if t_u.task_id == task.id:
+                existing_user = storage.get(User, t_u.user_id)
+                if existing_user.email_address == data.get('email_address'):
+                    response = {
+                        'Status': 'Fail',
+                        'Message': 'User already a member of the task'
+
+                    }
+                    return make_response(jsonify(response)), 400
+        for t_u in task.members:
+            if t_u.task_id == task.id and t_u.user_id == user_id:
                 break
+    else:
+        response = {
+            "Status": "Fail",
+            "Message": "Task not Found"
+        }
+        return make_response(jsonify(response)), 404
+
 
     project = storage.get(Project, task.project_id)
     for p_u in project.members:
