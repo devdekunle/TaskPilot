@@ -96,7 +96,7 @@ def get_task_members(current_user, task_id):
 @user_status
 def get_task_member(current_user, user_id, task_id):
     """
-    get a particular user from a project
+    get a particular user from a task
     """
     task = storage.get(Task, task_id)
     if task:
@@ -185,6 +185,8 @@ def add_to_task(current_user, user_id, task_id):
         abort(400, 'Not a JSON')
     if 'email_address' not in data:
         return make_response(jsonify({'error': 'Email address missing'})), 400
+    if 'member_role' not in data:
+        return make_response(jsonify({'error': 'member_role missing'})), 400
 
     task = storage.get(Task, task_id)
     if task:
@@ -223,7 +225,8 @@ def add_to_task(current_user, user_id, task_id):
     if user:
         if p_u.member_role == 'admin' or t_u.member_role == 'team_lead':
 
-            new_t_u = TaskUser(user_id=user.id, task_id=task.id, member_role='member')
+            new_t_u = TaskUser(user_id=user.id, task_id=task.id,
+                    member_role=data.get('member_role'))
 
             if new_t_u not in current_user.tasks:
                 user.tasks.append(new_t_u)
