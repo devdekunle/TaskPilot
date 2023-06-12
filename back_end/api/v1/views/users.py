@@ -5,6 +5,8 @@ get all users
 from models import storage
 from models.user import User
 from models.task import Task
+from models.sub_task import SubTask
+from models.subtask_user import SubTaskUser
 from models.project import Project
 from models.project_user import ProjectUser
 from models.task_user import TaskUser
@@ -12,6 +14,7 @@ from auth.current_user import user_status
 from flask import jsonify, abort, make_response, request
 from flask.views import MethodView
 from api.v1.views import api_blueprint
+from auth.email_utils import send_mail
 
 
 @api_blueprint.route('/users/projects/<project_id>', methods=['GET'])
@@ -24,6 +27,7 @@ def get_project_members(current_user, project_id):
     project_members = []
     if project:
         all_p_u = project.members
+        # check all project_user association for members of project
         for p_u in all_p_u:
             user_dict = {'user_details': p_u.user.to_dict(),
                         'member_role': p_u.member_role}
@@ -77,6 +81,7 @@ def get_task_members(current_user, task_id):
         all_t_u = task.members
         task_members = []
         for t_u in all_t_u:
+            # check all task_user association for members of a task
             if t_u.task_id == task_id:
                 user_dict = {
                     'user_details': t_u.user.to_dict(),
@@ -121,14 +126,43 @@ def get_task_member(current_user, user_id, task_id):
         }
         return make_response(jsonify(response)), 404
 
+@api_blueprint.route('/users/subtasks/<subtask_id>', methods=['GET'])
+@user_status
+def get_subtask_members(current_user, subtask_id):
+    """
+    Get all members in a task
+    """
+    subtask = storage.get(SubTask, subtask_id)
+    if subtask:
+        all_t_u = subtask.members
+        subtask_members = []
+        for s_u in all_t_u:
+            # check all task_user association for members of a task
+            if s_u.subtask_id == subtask_id:
+                subtask_members.append(s_u.user.to_dict())
+        return make_response(jsonify(subtask_members)), 200
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'SubTask not found'
+
+        }
+        return make_response(jsonify(task)), 404
+
 
 @api_blueprint.route('/users/<user_id>/projects/<project_id>/role', methods=['PUT'])
 @user_status
-def change_user_role(current_user, user_id, project_id):
+def change_project_member_role(current_user, user_id, project_id):
     """
     change a user role in a project
     """
     project = storage.get(Project, project_id)
+    if not project:
+        response = {
+            'Status': 'Fail',
+            'Message': 'Project doesn\'t exist'
+        }
+        return make_response(jsonify(response)), 404
     user_data = request.get_json()
     if not user_data:
         abort(404, 'Not a JSON')
@@ -136,7 +170,9 @@ def change_user_role(current_user, user_id, project_id):
         return make_response(jsonify({'error': 'member_role missing'})), 400
     if "email_address" not in user_data:
         return make_response(jsonify({'error': 'email missing'})), 400
-    # get user to update role using email
+    # retrieve use whose role will be updated using their email
+
+    # confirm if user to add to task is not account holder
     if user_data.get("email_address") != current_user.email_address:
         user = storage.get_user(user_data.get('email_address'))
     else:
@@ -146,9 +182,16 @@ def change_user_role(current_user, user_id, project_id):
         }
         return make_response(jsonify(response)), 400
     if user:
+        # check for admin user to perform operation
         for p_u in project.members:
             if p_u.user.id == user_id and p_u.project_id == project_id:
                 break
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'User not found in project'
+            }
+            return make_response(jsonify(response)), 404
     else:
         response = {
             'Status': 'Fail',
@@ -156,18 +199,19 @@ def change_user_role(current_user, user_id, project_id):
         }
         return make_response(jsonify(response)), 404
     if p_u.member_role == 'admin':
-        for p_u in project.members:
-            if p_u.user_id == user.id and p_u.project_id == project_id:
+        for pr_u in project.members:
+            # check if user is a member of the project
+            if pr_u.user_id == user.id and pr_u.project_id == project_id:
                 for key, value in user_data.items():
                     if key == 'member_role':
-                        setattr(p_u, key, value)
+                        setattr(pr_u, key, value)
+                pr_u.update()
+                return make_response(jsonify({'New project role': pr_u.member_role}))
         else:
             response = {
                 'Status': 'Fail',
                 'Message': 'User not part of the project'
             }
-        p_u.update()
-        return make_response(jsonify({'new_role': p_u.member_role}))
     else:
         response = {
             'Status': 'Fail',
@@ -228,15 +272,16 @@ def add_to_task(current_user, user_id, task_id):
             new_t_u = TaskUser(user_id=user.id, task_id=task.id,
                     member_role=data.get('member_role'))
 
-            if new_t_u not in current_user.tasks:
+            if new_t_u not in user.tasks:
                 user.tasks.append(new_t_u)
                 task.members.append(new_t_u)
                 storage.save()
+
                 response = {
                     'Status': 'Success',
                     'Message': 'User successfully added to task'
                 }
-                return make_response(jsonify(response)), 201
+                return make_response(jsonify(response)), 200
         else:
             response = {
                 'Status': 'Fail',
@@ -248,4 +293,153 @@ def add_to_task(current_user, user_id, task_id):
             'Status': 'Fail',
             'Message': 'Invited user doesn\'t exist'
         }
+        return make_response(jsonify(response)), 404
+
+@api_blueprint.route('/assign/subtasks/<subtask_id>/users/<user_id>',
+                methods=['POST'])
+@user_status
+def assign_subtask(current_user, subtask_id, user_id):
+    """
+    assign a subtask to a user
+    """
+    data = request.get_json()
+    if not data:
+        abort(400, 'not a JSON object')
+    if 'email_address' not in data:
+        return make_response(jsonify({'error': 'email_adrress missing'})), 400
+
+    subtask = storage.get(SubTask, subtask_id)
+    if subtask:
+        for s_u in subtask.members:
+            if s_u.subtask_id == subtask_id:
+                assigned_user = storage.get(User, user_id)
+                if assigned_user.email_address == data.get('email_address'):
+                    response = {
+                        'Status': 'Fail',
+                        'Message': 'user already assigned task'
+                    }
+                    return make_response(jsonify(response)), 400
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'Subtask not found'
+        }
+        return make_response(jsonify(response)), 404
+    task = storage.get(Task, subtask.task_id)
+    for t_u in task.members:
+        if t_u.task_id == task.id and t_u.user == user_id:
+            break
+
+    project = storage.get(Project, task.project_id)
+    for p_u in project.members:
+        if p_u.project_id == project.id and p_u.user_id == user_id:
+            break
+
+    if data.get('email_address') != current_user.email_address:
+        user = storage.get_user(data.get('email_address'))
+
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'cannot assign to current_user'
+        }
+        return make_response(jsonify(response)), 400
+    if user:
+        if p_u.member_role == 'admin' or t_u.member_role == 'team_lead':
+            new_s_u = SubTaskUser(user_id=user.id, subtask_id=subtask.id)
+
+            if new_s_u not in user.subtasks:
+                user.subtasks.append(new_s_u)
+                subtask.members.append(new_s_u)
+                storage.save()
+                response = {
+                    'Status': 'Success',
+                    'Message': 'User successfully assigned subtask'
+                }
+                return make_response(jsonify(response)), 200
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'Permission Denied'
+            }
+            return make_response(jsonify(response)), 403
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'User to assign task to doesn\'t exist'
+        }
+        return make_response(jsonify(response)), 404
+
+@api_blueprint.route('/users/<user_id>/tasks/<task_id>/role',
+                methods=['PUT'])
+@user_status
+def change_task_member_role(current_user, task_id, user_id):
+    """
+    change a task member's role
+    """
+    task = storage.get(Task, task_id)
+    if not task:
+        response = {
+            'Status': 'Fail',
+            'Message': 'Task doesn\'t exist'
+        }
+        return make_response(jsonify(response)), 404
+    user_data = request.get_json()
+    if not user_data:
+        abort(404, 'Not a JSON')
+    if "member_role" not in user_data:
+        return make_response(jsonify({'error': 'member_role missing'})), 400
+    if "email_address" not in user_data:
+        return make_response(jsonify({'error': 'email missing'})), 400
+    # retrieve use whose role will be updated using their email
+
+    # confirm if user to add to update is not account holder
+    if user_data.get("email_address") != current_user.email_address:
+        user = storage.get_user(user_data.get('email_address'))
+    else:
+        response = {
+            "Status": "Fail",
+            "Message": "Cannot change current_user role"
+        }
+        return make_response(jsonify(response)), 400
+    project = storage.get(Project, task.project_id)
+    if user:
+        # check for admin user to perform operation
+        for p_u in project.members:
+            if p_u.user_id == user_id and p_u.project_id == project.id:
+                break
+
+        else:
+            response = {
+
+                'Status': 'Fail',
+                'Message': 'User not found in project'
+            }
+            return make_response(jsonify(response)), 404
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'User to update doesnt\'t exist'
+        }
+        return make_response(jsonify(response)), 404
+    if p_u.member_role == 'admin':
+        for t_u in task.members:
+            # check if user is a member of the project
+            if t_u.user_id == user.id and t_u.task_id == task_id:
+                # update member_role of task_user association
+                for key, value in user_data.items():
+                    if key == 'member_role':
+                        setattr(t_u, key, value)
+                t_u.update()
+                return make_response(jsonify({'New Team role': t_u.member_role}))
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'User not part of the task'
+            }
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'Permission Denied'
+            }
         return make_response(jsonify(response)), 404

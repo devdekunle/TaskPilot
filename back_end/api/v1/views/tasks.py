@@ -56,7 +56,7 @@ def create_task(current_user, project_id, user_id):
                 print(new_task)
                 # create user and task association
                 t_u = TaskUser(task_id=new_task.id,
-                        user_id=user_id, member_role='team_lead')
+                        user_id=user_id)
 
                 if t_u not in current_user.tasks:
                     current_user.tasks.append(t_u)
