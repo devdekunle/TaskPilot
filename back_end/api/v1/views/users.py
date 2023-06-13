@@ -219,7 +219,7 @@ def change_project_member_role(current_user, user_id, project_id):
             }
         return make_response(jsonify(response)), 404
 
-@api_blueprint.route('/add/users/<user_id>/tasks/<task_id>', methods=['POST'])
+@api_blueprint.route('/users/<user_id>/tasks/<task_id>/add', methods=['POST'])
 @user_status
 def add_to_task(current_user, user_id, task_id):
     """ add a user to a task
@@ -295,7 +295,7 @@ def add_to_task(current_user, user_id, task_id):
         }
         return make_response(jsonify(response)), 404
 
-@api_blueprint.route('/assign/subtasks/<subtask_id>/users/<user_id>',
+@api_blueprint.route('/users/<user_id>/subtasks/<subtask_id>/assign',
                 methods=['POST'])
 @user_status
 def assign_subtask(current_user, subtask_id, user_id):
@@ -442,4 +442,227 @@ def change_task_member_role(current_user, task_id, user_id):
             'Status': 'Fail',
             'Message': 'Permission Denied'
             }
+        return make_response(jsonify(response)), 404
+
+@api_blueprint.route('/users/<user_id>/projects/<project_id>',
+                    methods=['DELETE'])
+@user_status
+def remove_user_from_project(current_user, user_id, project_id):
+    """
+    remove a user from project
+    """
+    # get json data
+    data = request.get_json()
+    if not data:
+        abort(400, "Not a JSON object")
+    if 'email_address' not in data:
+        return make_response(jsonify({'Error': 'Email address missing'})), 400
+    if data.get('email_address') == current_user.email_address:
+        response = {
+            'Status': 'Fail',
+            'Message': 'Cannot remove account owner from project'
+        }
+        return make_response(jsonify(response)), 400
+
+    # get instance of user to remove from project
+    user = storage.get_user(data.get('email_address'))
+    if user:
+        project = storage.get(Project, project_id)
+        if project:
+            for pr_u in project.members:
+                if pr_u.project_id == project_id and pr_u.user_id == user_id:
+                    break
+            else:
+                response = {
+                    'Status': 'Fail',
+                    'Message': 'No project user association found'
+
+                }
+                return make_response(jsonify(response)), 404
+            if pr_u.member_role == 'admin':
+                # check all members of the project
+                for p_u in project.members:
+                    # remove user from from project
+                    if p_u.user_id == user.id and p_u.project_id == project_id:
+                        project.members.remove(p_u)
+                        user.projects.remove(p_u)
+                        storage.delete(p_u)
+                else:
+                    response = {
+                        'Status': 'Fail',
+                        'Message': 'user to remove is not a part of the project'
+                    }
+                    return make_response(jsonify(response)), 404
+                # remove user from all tasks of the project
+                for task in storage.all(Task).values():
+                    if task.project_id == project_id:
+                        for t_u in task.members:
+                            if t_u.user_id == user.id and t_u.task_id == task.id:
+                                task.members.remove(t_u)
+                                user.tasks.remove(t_u)
+                                storage.delete(t_u)
+                    # remove user from all subtasks of each task
+                    for subtask in storage.all(SubTask).values():
+                        if subtask.task_id == task.id:
+                            for s_u in subtask.members:
+                                if s_u.user_id == user.id and s_u.subtask_id == subtask.id:
+                                    subtask.members.remove(s_u)
+                                    user.subtasks.remove(s_u)
+                                    storage.delete(s_u)
+                storage.save()
+                response = {
+                    'Status': 'Success',
+                    'Message': 'USer successfully removed from project'
+                }
+                return make_response(jsonify(response)), 204
+            else:
+                response = {
+                    'Status': 'Fail',
+                    'Message': 'Permission Denied'
+                }
+                return make_response(jsonify(response)), 403
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'Project doesn\'t exist'
+            }
+            return make_response(jsonify(response)), 404
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'User to remove from project does not exist'
+        }
+        return make_response(jsonify(response)), 404
+
+@api_blueprint.route('/users/<user_id>/tasks/<task_id>', methods=['DELETE'])
+@user_status
+def remove_user_from_task(current_user, user_id, task_id):
+    """
+    remove a user from a task
+    """
+    data = request.get_json()
+    if not data:
+        abort(400, "Not a JSON object")
+    if 'email_address' not in data:
+        return make_response(jsonify({'Error': 'Email address missing'})), 400
+
+    # get instance of user to remove from task
+    user = storage.get_user(data.get('email_address'))
+    if user:
+        task = storage.get(Task, task_id)
+        if task:
+            for t_u in task.members:
+                if t_u.user_id == user_id and t_u.task_id == task_id:
+                    break
+            else:
+                response = {
+                    'Status': 'Fail',
+                    'Message': 'no task user association found'
+                }
+                return make_response(jsonify(response)), 404
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'Task doesn\'t exist'
+            }
+            return make_response(jsonify(response)), 404
+        project = storage.get(Project, task.project_id)
+        for p_u in project.members:
+            if p_u.user_id == user_id and p_u.project_id == project.id:
+                break
+        if t_u.member_role == 'team_lead' or p_u.member_role == 'admin':
+            for t_u in task.members:
+                if t_u.user_id == user.id and t_u.task_id == task_id:
+                    task.members.remove(t_u)
+                    user.tasks.remove(t_u)
+                    storage.delete(t_u)
+            else:
+                response = {
+                    'Status': 'Fail',
+                    'Message': 'user to remove is not part of the task'
+                }
+                return make_response(jsonify(response)), 404
+            for subtask in storage.all(SubTask).values():
+                if subtask.task_id == task.id:
+                    for s_u in subtask.members:
+                        if s_u.user_id == user.id and s_u.subtask_id == subtask.id:
+                            subtask.members.remove(s_u)
+                            user.subtasks.remove(s_u)
+                            storage.delete(s_u)
+            storage.save()
+            response = {
+                'Status': 'Fail',
+                'Message': 'User successfully removed from task'
+            }
+            return make_response(jsonify(response)), 204
+        else:
+            response == {
+                'Status': 'Fail',
+                'Message': 'Permission Denied'
+            }
+            return make_response(jsonify(response)), 403
+    else:
+        response = {
+
+            'Status': 'Fail',
+            'Message': 'user to remove from task does not exist'
+        }
+        return make_response(jsonify(response)), 404
+
+@api_blueprint.route('/users/<user_id>/subtasks/<subtask_id>',
+                     methods=['DELETE'])
+@user_status
+def remove_user_from_subtask(current_user, user_id, subtask_id):
+    """
+    remove a user from a subtask
+    """
+    data = request.get_json()
+    if not data:
+        abort(400, "Not a JSON object")
+    if 'email_address' not in data:
+        return make_response(jsonify({'Error': 'Email address missing'})), 400
+
+    # get instance of user to remove from subtask
+    user = storage.get_user(data.get('email_address'))
+    if user:
+        subtask = storage.get(SubTask, subtask_id)
+        if subtask:
+            task = storage.get(Task, subtask.task_id)
+            for t_u in task.members:
+                if t_u.user_id == user_id and t_u.task_id == task.id:
+                    break
+            project = storage.get(Project, task.project_id)
+            for p_u in project.members:
+                if p_u.user_id == user_id and project_id == project.id:
+                    break
+            if p_u.member_role == 'admin' or t_u.member_role == 'team_lead':
+                for s_u in subtask.members:
+                    if s_u.user_id == user.id and s_u.subtask_id == subtask_id:
+                        subtask.members.remove(s_u)
+                        user.subtasks.remove(s_u)
+                        storage.delete(s_u)
+                        storage.save()
+                else:
+                    response = {
+                        'Status': 'Fail',
+                        'Message': 'user is not a part of subtask'
+                    }
+                    return make_response(jsonify(response)), 404
+            else:
+                response = {
+                    'Status': 'Fail',
+                    'Message': 'Permission Denied'
+                }
+                return make_response(jsonify(response)), 403
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'Subtask not found'
+            }
+            return make_response(jsonify(response)), 404
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'User to remove from subtask doesn\'t exist'
+        }
         return make_response(jsonify(response)), 404

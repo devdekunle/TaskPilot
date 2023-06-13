@@ -53,7 +53,6 @@ def create_task(current_user, project_id, user_id):
                 task_data['project_id'] = project_id
                 new_task = Task(**task_data)
                 new_task.save()
-                print(new_task)
                 # create user and task association
                 t_u = TaskUser(task_id=new_task.id,
                         user_id=user_id)
