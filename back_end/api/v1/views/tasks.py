@@ -1,4 +1,4 @@
-#!/usr/bin/python3p_u.member_role == 'admin
+#!/usr/bin/python3
 """
 Task API
 """
