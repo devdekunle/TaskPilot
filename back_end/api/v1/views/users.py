@@ -232,12 +232,19 @@ def add_to_task(current_user, user_id, task_id):
     if 'member_role' not in data:
         return make_response(jsonify({'error': 'member_role missing'})), 400
 
+    user = storage.get_user(data.get('email_address'))
+    if not user:
+        response = {
+            'Status': 'Fail',
+            'Message': 'user to add to task doesn\'t exist'
+        }
+        return make_response(jsonify(response)), 404
+
     task = storage.get(Task, task_id)
     if task:
         for t_u in task.members:
-            if t_u.task_id == task.id:
-                existing_user = storage.get(User, t_u.user_id)
-                if existing_user.email_address == data.get('email_address'):
+            if t_u.task_id == task.id
+                if t_u.user_id == user.id and t_u.task_id == task_id
                     response = {
                         'Status': 'Fail',
                         'Message': 'User already a member of the task'
@@ -259,13 +266,6 @@ def add_to_task(current_user, user_id, task_id):
     for p_u in project.members:
         if p_u.project_id == project.id and p_u.user_id == user_id:
             break
-    if data.get("email_address") != current_user.email_address:
-        user = storage.get_user(data.get('email_address', None))
-    else:
-        response = {
-            "Status": "Fail",
-            "Message": "Cannot invite current_user"}
-        return make_response(jsonify(response)), 400
     if user:
         if p_u.member_role == 'admin' or t_u.member_role == 'team_lead':
 
@@ -288,12 +288,6 @@ def add_to_task(current_user, user_id, task_id):
                 'Message': 'Permission Denied'
             }
             return make_response(jsonify(response)), 403
-    else:
-        response = {
-            'Status': 'Fail',
-            'Message': 'Invited user doesn\'t exist'
-        }
-        return make_response(jsonify(response)), 404
 
 @api_blueprint.route('/users/<user_id>/subtasks/<subtask_id>/assign',
                 methods=['POST'])
@@ -308,24 +302,23 @@ def assign_subtask(current_user, subtask_id, user_id):
     if 'email_address' not in data:
         return make_response(jsonify({'error': 'email_adrress missing'})), 400
 
+    user = storage.get_user(data.get('email_address'))
+    if not user:
+        response = {
+            'Status': 'Fail',
+            'Message': 'User to assign task doesn\'t exist'
+        }
+        return make_response(jsonify(response)), 404
+
     subtask = storage.get(SubTask, subtask_id)
     if subtask:
         for s_u in subtask.members:
-            if s_u.subtask_id == subtask_id:
-                assigned_user = storage.get(User, user_id)
-                if assigned_user:
-                    if assigned_user.email_address == data.get('email_address'):
-                        response = {
-                            'Status': 'Fail',
-                            'Message': 'user already assigned task'
-                        }
-                        return make_response(jsonify(response)), 400
-                else:
-                    response = {
-                        'Status': 'Fail',
-                        'Message': 'User to assign subtask to does not exist'
-                    }
-                    return make_response(jsonify(response)), 404
+            if s_u.subtask_id == subtask_id and s_u.user_id == user.id:
+                response = {
+                    'Status': 'Fail',
+                    'Message': 'user already assigned subtask'
+                }
+                return make_response(jsonify(response)), 400
     else:
         response = {
             'Status': 'Fail',
@@ -341,16 +334,6 @@ def assign_subtask(current_user, subtask_id, user_id):
     for p_u in project.members:
         if p_u.project_id == project.id and p_u.user_id == user_id:
             break
-
-    if data.get('email_address') != current_user.email_address:
-        user = storage.get_user(data.get('email_address'))
-
-    else:
-        response = {
-            'Status': 'Fail',
-            'Message': 'cannot assign to current_user'
-        }
-        return make_response(jsonify(response)), 400
     if user:
         if p_u.member_role == 'admin' or t_u.member_role == 'team_lead':
             new_s_u = SubTaskUser(user_id=user.id, subtask_id=subtask.id)
@@ -370,12 +353,6 @@ def assign_subtask(current_user, subtask_id, user_id):
                 'Message': 'Permission Denied'
             }
             return make_response(jsonify(response)), 403
-    else:
-        response = {
-            'Status': 'Fail',
-            'Message': 'User to assign task to doesn\'t exist'
-        }
-        return make_response(jsonify(response)), 404
 
 @api_blueprint.route('/users/<user_id>/tasks/<task_id>/role',
                 methods=['PUT'])
