@@ -105,7 +105,7 @@ def delete_project(current_user, project_id, user_id):
             continue
     storage.delete(project)
     storage.save()
-    return make_response(jsonify({'status': 'Project deleted'})), 200
+    return make_response(jsonify({'status': 'Project deleted'})), 204
 
 
 

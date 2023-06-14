@@ -243,4 +243,4 @@ def delete_task(current_user, task_id, user_id):
             'Status': 'Success',
             'Message': 'Task deleted'
         }
-        return make_response(jsonify(response)), 200
+        return make_response(jsonify(response)), 204

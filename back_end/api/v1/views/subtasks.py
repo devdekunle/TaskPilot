@@ -218,4 +218,4 @@ def delete_subtask(current_user, subtask_id):
             'Status': 'Success',
             'Message': 'SubTask deleted'
         }
-        return make_response(jsonify(response)), 200
+        return make_response(jsonify(response)), 204

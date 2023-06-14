@@ -243,14 +243,12 @@ def add_to_task(current_user, user_id, task_id):
     task = storage.get(Task, task_id)
     if task:
         for t_u in task.members:
-            if t_u.task_id == task.id
-                if t_u.user_id == user.id and t_u.task_id == task_id
-                    response = {
-                        'Status': 'Fail',
-                        'Message': 'User already a member of the task'
-
-                    }
-                    return make_response(jsonify(response)), 400
+            if t_u.user_id == user.id and t_u.task_id == task_id:
+                response = {
+                    'Status': 'Fail',
+                    'Message': 'User already a member of the task'
+                }
+                return make_response(jsonify(response)), 400
         for t_u in task.members:
             if t_u.task_id == task.id and t_u.user_id == user_id:
                 break
@@ -529,64 +527,58 @@ def remove_user_from_task(current_user, user_id, task_id):
 
     # get instance of user to remove from task
     user = storage.get_user(data.get('email_address'))
-    if user:
-        task = storage.get(Task, task_id)
-        if task:
-            for t_u in task.members:
-                if t_u.user_id == user_id and t_u.task_id == task_id:
-                    break
-            else:
-                response = {
-                    'Status': 'Fail',
-                    'Message': 'no task user association found'
-                }
-                return make_response(jsonify(response)), 404
-        else:
-            response = {
-                'Status': 'Fail',
-                'Message': 'Task doesn\'t exist'
-            }
-            return make_response(jsonify(response)), 404
-        project = storage.get(Project, task.project_id)
-        for p_u in project.members:
-            if p_u.user_id == user_id and p_u.project_id == project.id:
-                break
-        if t_u.member_role == 'team_lead' or p_u.member_role == 'admin':
-            for t_u in task.members:
-                if t_u.user_id == user.id and t_u.task_id == task_id:
-                    task.members.remove(t_u)
-                    storage.delete(t_u)
-            else:
-                response = {
-                    'Status': 'Fail',
-                    'Message': 'user to remove is not part of the task'
-                }
-                return make_response(jsonify(response)), 404
-            for subtask in storage.all(SubTask).values():
-                if subtask.task_id == task.id:
-                    for s_u in subtask.members:
-                        if s_u.user_id == user.id and s_u.subtask_id == subtask.id:
-                            subtask.members.remove(s_u)
-                            storage.delete(s_u)
-            storage.save()
-            response = {
-                'Status': 'Success',
-                'Message': 'User successfully removed from task'
-            }
-            return make_response(jsonify(response)), 204
-        else:
-            response == {
-                'Status': 'Fail',
-                'Message': 'Permission Denied'
-            }
-            return make_response(jsonify(response)), 403
-    else:
+    if not user:
         response = {
-
             'Status': 'Fail',
             'Message': 'user to remove from task does not exist'
         }
         return make_response(jsonify(response)), 404
+    task = storage.get(Task, task_id)
+    if task:
+        for t_u in task.members:
+            if t_u.user_id == user_id and t_u.task_id == task_id:
+                break
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'no task user association found'
+            }
+            return make_response(jsonify(response)), 404
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'Task doesn\'t exist'
+        }
+        return make_response(jsonify(response)), 404
+    project = storage.get(Project, task.project_id)
+    for p_u in project.members:
+        if p_u.user_id == user_id and p_u.project_id == project.id:
+            break
+    if t_u.member_role == 'team_lead' or p_u.member_role == 'admin':
+        for t_u in task.members:
+            if t_u.user_id == user.id and t_u.task_id == task.id:
+                task.members.remove(t_u)
+                storage.delete(t_u)
+
+        for subtask in storage.all(SubTask).values():
+            if subtask.task_id == task.id:
+                break
+        for s_u in subtask.members:
+            if s_u.user_id == user.id and s_u.subtask_id == subtask.id:
+                subtask.members.remove(s_u)
+                storage.delete(s_u)
+                storage.save()
+                response = {
+                    'Status': 'Success',
+                    'Message': 'User successfully removed from task'
+                }
+                return make_response(jsonify(response)), 204
+    else:
+        response == {
+            'Status': 'Fail',
+            'Message': 'Permission Denied'
+        }
+        return make_response(jsonify(response)), 403
 
 @api_blueprint.route('/users/<user_id>/subtasks/<subtask_id>',
                      methods=['DELETE'])
@@ -630,7 +622,7 @@ def remove_user_from_subtask(current_user, user_id, subtask_id):
                             'Status': 'Success',
                             'Message': 'User successfully removed from subtask'
                         }
-                        return make_response(jsonify(response)), 404
+                        return make_response(jsonify(response)), 204
                 else:
                     response = {
                     'Status': 'Fail',
