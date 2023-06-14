@@ -468,12 +468,7 @@ def remove_user_from_project(current_user, user_id, project_id):
                     if p_u.user_id == user.id and p_u.project_id == project_id:
                         project.members.remove(p_u)
                         storage.delete(p_u)
-                else:
-                    response = {
-                        'Status': 'Fail',
-                        'Message': 'user to remove is not a part of the project'
-                    }
-                    return make_response(jsonify(response)), 404
+
                 # remove user from all tasks of the project
                 for task in storage.all(Task).values():
                     if task.project_id == project_id:
@@ -482,18 +477,18 @@ def remove_user_from_project(current_user, user_id, project_id):
                                 task.members.remove(t_u)
                                 storage.delete(t_u)
                     # remove user from all subtasks of each task
-                    for subtask in storage.all(SubTask).values():
-                        if subtask.task_id == task.id:
-                            for s_u in subtask.members:
-                                if s_u.user_id == user.id and s_u.subtask_id == subtask.id:
-                                    subtask.members.remove(s_u)
-                                    storage.delete(s_u)
-                storage.save()
-                response = {
-                    'Status': 'Success',
-                    'Message': 'USer successfully removed from project'
-                }
-                return make_response(jsonify(response)), 204
+                            for subtask in storage.all(SubTask).values():
+                                if subtask.task_id == task.id:
+                                    for s_u in subtask.members:
+                                        if s_u.user_id == user.id and s_u.subtask_id == subtask.id:
+                                            subtask.members.remove(s_u)
+                                            storage.delete(s_u)
+                        storage.save()
+                        response = {
+                            'Status': 'Success',
+                            'Message': 'USer successfully removed from project'
+                        }
+                        return make_response(jsonify(response)), 204
             else:
                 response = {
                     'Status': 'Fail',
@@ -562,12 +557,11 @@ def remove_user_from_task(current_user, user_id, task_id):
 
         for subtask in storage.all(SubTask).values():
             if subtask.task_id == task.id:
-                break
-        for s_u in subtask.members:
-            if s_u.user_id == user.id and s_u.subtask_id == subtask.id:
-                subtask.members.remove(s_u)
-                storage.delete(s_u)
-                storage.save()
+                for s_u in subtask.members:
+                    if s_u.user_id == user.id and s_u.subtask_id == subtask.id:
+                        subtask.members.remove(s_u)
+                        storage.delete(s_u)
+                        storage.save()
                 response = {
                     'Status': 'Success',
                     'Message': 'User successfully removed from task'
