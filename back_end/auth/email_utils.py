@@ -7,7 +7,7 @@ from flask_mail import Mail, Message
 mail = Mail()
 
 
-def send_mail(subject=None, link=None, token=None, sender=None, recipients=[], text_body=None):
+def send_mail(subject=None, link=None, sender=None, recipients=[], text_body=None):
     """
     function to send messages to users
     """

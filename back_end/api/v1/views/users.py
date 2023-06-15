@@ -15,6 +15,7 @@ from flask import jsonify, abort, make_response, request
 from flask.views import MethodView
 from api.v1.views import api_blueprint
 from auth.email_utils import send_mail
+from flask_bcrypt import check_password_hash, generate_password_hash
 
 
 @api_blueprint.route('/users/projects/<project_id>', methods=['GET'])
@@ -641,3 +642,43 @@ def remove_user_from_subtask(current_user, user_id, subtask_id):
             'Message': 'User to remove from subtask doesn\'t exist'
         }
         return make_response(jsonify(response)), 404
+
+@api_blueprint.route('/password',
+                    methods=['PUT'])
+@user_status
+def change_password(current_user):
+    """
+    change a user password
+    """
+    passwd_data = request.get_json()
+    if not passwd_data:
+        abort(404, 'Not a JSON object')
+    if 'new_password' not in passwd_data:
+        response = {
+            'Status': 'Fail',
+            'Message': 'password missing'
+        }
+        return make_response(jsonify(response)), 400
+    if 'old_password' not in passwd_data:
+        response = {
+            'Status': 'Fail',
+            'Message': 'old password missing'
+        }
+        return make_response(jsonify(response)), 400
+    if not check_password_hash(current_user.password,
+                                passwd_data.get('old_password')):
+        response = {
+
+            'Status': 'Fail',
+            'Message': 'old password is incorrect'
+        }
+        return make_response(jsonify(response)), 400
+
+    current_user.password = generate_password_hash(passwd_data.get('new_password'))
+    current_user.update()
+    response = {
+        'Status': 'Success',
+        'Message': 'Password change successful'
+    }
+    return make_response(jsonify(response)), 200
+
