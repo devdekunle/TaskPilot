@@ -11,5 +11,6 @@ from auth.auth_views.registration import *
 from auth.auth_views.login import *
 from auth.auth_views.logout import *
 from auth.auth_views.invitation import *
+from auth.auth_views.password import *
 
 

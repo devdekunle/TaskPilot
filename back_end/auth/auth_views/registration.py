@@ -34,7 +34,6 @@ class Register(MethodView):
                     pending_user_id = str(uuid.uuid4())
                     pending_users[pending_user_id] = user_data
                     # generate token using email
-                    print(SECRET_KEY)
                     auth_token = jwt.encode(
                         {'email_address': user_data['email_address'],
                         'user_id': pending_user_id,
@@ -107,7 +106,7 @@ class Register(MethodView):
                         'status': 'fail',
                         'message': 'Token is used and blacklisted'
                     }
-                    return make_response(jsonify(response)), 403
+                    return make_response(jsonify(response)), 400
             except jwt.ExpiredSignatureError:
                 return "Token Expired! Please register again"
             except jwt.InvalidTokenError:

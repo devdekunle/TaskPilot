@@ -19,7 +19,6 @@ class User(BaseModel, Base):
     """ class that defines the users and members of the project"""
     __tablename__ = 'users'
     first_name = Column(String(255), nullable=False)
-    admin = Column(Boolean, default=True)
     last_name = Column(String(255), nullable=False)
     email_address = Column(String(255), nullable=False, unique=True)
     password = Column(String(255), nullable=False)
@@ -79,6 +78,7 @@ class User(BaseModel, Base):
         """
         try:
             payload = jwt.decode(auth_token, SECRET_KEY)
+            # check if the token is already used before
             blacklisted_token = BlackToken.check_blacklist(auth_token)
             if blacklisted_token:
                 return 'Token is blacklisted. Login again'
