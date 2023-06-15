@@ -1,0 +1,29 @@
+.modal-container {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  left: 0;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_body {
+  background-color: var(--light);
+  min-width: 320px;
+  min-height: 300px;
+  position: relative;
+  max-width: 90vw;
+  margin-top: 400px;
+  border-radius: 0.25rem;
+}
+
+.modal_body > .dismiss_btn {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  cursor: pointer;
+}

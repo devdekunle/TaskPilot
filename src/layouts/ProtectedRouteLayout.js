@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Form } from "formik";
 import { TextInput } from "../components/forms/formElements";
 import SideNav from "../components/SideNav";
 import { Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import "../styles/protected-page.css";
-import { BsSearch, BsBell } from 'react-icons/bs';
+import { BsSearch, BsBell } from "react-icons/bs";
 
 const ProtectedRouteLayout = () => {
+  const { userData } = useSelector((state) => state?.auth);
+  const { first_name: firstName, last_name: lastName } = userData;
+
+  useEffect(() => {}, [userData, firstName, lastName]);
+
   return (
     <div className="protected-route-container">
       <div className="header">
@@ -37,10 +44,12 @@ const ProtectedRouteLayout = () => {
           </Formik>
         </div>
         <div className="extras">
-          <BsBell className="bell_icon"/>
+          <BsBell className="bell_icon" />
 
-          <div className="user_profile_pic">AB</div>
-          <p className="user_name">Abraham S. Adekunle</p>
+          <div className="user_profile_pic">
+            {`${firstName[0]}${lastName[0]}`}
+          </div>
+          <p className="user_name">{`${firstName} ${lastName}`}</p>
         </div>
       </div>
       <SideNav />

@@ -1,0 +1,33 @@
+.token_verification{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* flex-direction: column; */
+    text-align: center;
+    background-color: var(--light);
+    color: grey;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.token_verification > p,
+.token_verification > div{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.token_spinner{
+    margin-bottom: 1rem;
+}
+
+.token_verification  button {
+    min-width: 100px;
+    padding: .25rem;
+    background-color: var(--theme-blue);
+    color: white;
+    margin-top: 1rem;
+}

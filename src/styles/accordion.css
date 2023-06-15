@@ -31,6 +31,8 @@
     transform: translateY(-50%);
     background-color: var(--light);
     padding: 0 .5rem;
+    z-index: 1;
+    font-weight: 600;
 }
 
 .accordion-title >span{
@@ -39,7 +41,7 @@
 
 .accordion-body{
     width: 100%;
-    border: 3px solid #aaa;
+    border: 2px solid #ccc;
     border-right: none;
     border-left: none;
     height: 0px;

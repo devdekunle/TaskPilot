@@ -1,146 +1,154 @@
-.navbar{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    font-weight: 100;
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  font-weight: 100;
 }
 
-
-.navbar-isClosed{
-    display: flex;
-    color: var(--light);
-    align-items: center;
-    padding: 1em;
-    position: absolute;
-    left: 0;
-    top: 0;
+.navbar-isClosed {
+  display: flex;
+  color: var(--light);
+  align-items: center;
+  padding: 1em;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
-.navbar-isClosed > .menu-bars{
-    margin-right: 1rem;
+.navbar-isClosed > .menu-bars {
+  margin-right: 1rem;
 }
 
-
-.navbar-open, .navbar-closed{
-    width: 70%;
-    border: 1px solid var(--theme-dark);
-    background-color: var(--theme-dark);
-    height: 100vh;
-    color: var(--light);
-    padding: 1rem;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: all .5s linear;
-    z-index: 3;
+.navbar-open,
+.navbar-closed {
+  width: 70%;
+  border: 1px solid var(--theme-dark);
+  background-color: var(--theme-dark);
+  height: 100vh;
+  color: var(--light);
+  padding: 1rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.5s linear;
+  z-index: 3;
 }
 
-.navbar-closed{
-    padding: 1rem;
-    left: -100%;
+.navbar-closed {
+  padding: 1rem;
+  left: -100%;
 }
 
-p.logo{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: .25rem;
+p.logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 0.25rem;
 }
 
-.navbar ul > li{
-    padding: .5rem 0;
-    padding-bottom: 0;
-    margin: .5rem 0;
-    border-bottom: 1px solid var(--light);
-    font-weight: 200;
-    
+p.logo > p {
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--light);
+  margin-bottom: 1rem;
 }
 
-.navbar ul > li > a{
-    padding-bottom: .25rem;
-    display: block;
-    padding-left: .25rem;
-    transition: all .5s ease-in;
-    display: flex;
-    align-items: center;
+p.logo > p > span {
+  color: var(--theme-blue);
 }
 
-
- div.navbar-login{
-    margin-top: 2rem;
+.navbar ul > li {
+  padding: 0.5rem 0;
+  padding-bottom: 0;
+  margin: 0.5rem 0;
+  border-bottom: 1px solid var(--light);
+  font-weight: 200;
 }
 
-.navbar-login > a{
-    padding: .25rem;
-    display: block;
+.navbar ul > li > a {
+  padding-bottom: 0.25rem;
+  display: block;
+  padding-left: 0.25rem;
+  transition: all 0.5s ease-in;
+  display: flex;
+  align-items: center;
 }
 
-.navlink_icon{
-    margin-right: .5rem;
-    font-size: .85rem;
+div.navbar-login {
+  margin-top: 2rem;
+}
+
+.navbar-login > a {
+  padding: 0.25rem;
+  display: block;
+}
+
+.navlink_icon {
+  margin-right: 0.5rem;
+  font-size: 0.85rem;
 }
 
 /* ACTIVE NAV CLASS */
-.active{
-    background-color: var(--theme-blue);
-    color: var(--dark);
+.active {
+  background-color: var(--theme-blue);
+  color: var(--dark);
 }
 
 .navbar ul > li > a:hover,
-.navbar-login > a:hover{
-    background-color: rgba(0, 162, 237, .3);
+.navbar-login > a:hover {
+  background-color: rgba(0, 162, 237, 0.3);
 }
-
 
 /* Media Query */
-@media  screen and (min-width: 756px) {
-    .navbar{
-        position: static;
-        height: 70px;
-    }
+@media screen and (min-width: 756px) {
+  .navbar {
+    position: static;
+    height: 70px;
+  }
 
-    .navbar-isClosed, .navbar-desktop > p.logo > .close-icon{
-        display: none;
-    }
-    
-    .navbar-desktop{
-        display: flex;
-        position: inherit;
-        height: 100%;
-        width: 100%;
-        justify-content: space-between;
-        background-color: transparent;
-        align-items: center;
-        border: none;
-        padding: 0  2rem;
-    }
-    
-    .navbar ul {
-        display: flex;
-        align-items: center;
-    }
+  .navbar-isClosed,
+  .navbar-desktop > p.logo > .close-icon {
+    display: none;
+  }
 
-
-    .navbar ul > li,
-    .navbar ul > li > a {
-        border-bottom: none;
-        margin: 0 .5rem;
-        padding: 0;
-    }
-
-    
- div.navbar-login{
-    margin-top: 0;
-}
-
-    .active{
-        color: var(--theme-blue);
-        background-color: transparent;
-    }
-
-    .navbar ul > li > a:hover{
-    color: rgba(0, 162, 237, .3);
+  .navbar-desktop {
+    display: flex;
+    position: inherit;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
     background-color: transparent;
-}
+    align-items: center;
+    border: none;
+    padding: 0 2rem;
+  }
+
+  .navbar ul {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar ul > li,
+  .navbar ul > li > a {
+    border-bottom: none;
+    margin: 0 0.5rem;
+    padding: 0;
+  }
+
+  div.navbar-login {
+    margin-top: 0;
+  }
+
+  .active {
+    color: var(--theme-blue);
+    background-color: transparent;
+  }
+
+  .navbar ul > li > a:hover,
+  .navbar ul > li > a:hover,
+  .navbar-login > a:hover {
+    color: rgba(0, 162, 237, 0.3);
+    background-color: transparent;
+  }
 }

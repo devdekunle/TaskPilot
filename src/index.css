@@ -1,41 +1,50 @@
 /* Contains all global style */
 
-*, *::after, *::before{
+*,
+*::after,
+*::before {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 /* Theme Colors */
-:root{
+:root {
   --dark: #131e27;
   --theme-dark: #1b354a;
   --theme-blue: #00a2ed;
   --light: #fafafa;
   --theme-light: #f0f0f0;
+  /* --danger: #E91E63; */
+  --danger: #ff4444;
+  --danger-dark: #cc0000;
+  --success: #00c851;
+  --success-dark: #007e33;
+  --warning: #ff8800;
+  --text-dark: #232f34;
 }
 
-
-html{
+html {
   background-color: var(--dark);
   color: var(--theme-light);
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: 'Syne', sans-serif;
+  /* font-family: 'Syne', sans-serif; */
+  font-weight: 300;
 }
 
-*::-webkit-scrollbar{
+*::-webkit-scrollbar {
   display: none;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -48,14 +57,59 @@ li {
   list-style: none;
 }
 
-.relative{
+button:disabled {
+  background-color: lightgray !important;
+  color: white;
+}
+
+input {
+  border: 1px solid lightgrey !important;
+  border-radius: 0.25rem !important;
+  padding: 0.5rem 0.25rem !important;
+}
+
+input:focus{
+  border: 2px solid var(--theme-blue) !important;
+}
+
+.relative {
   position: relative;
 }
 
-.btn{
+.btn {
   border: none;
   outline: none;
-  border-radius: .15rem;
+  border-radius: 0.15rem;
   cursor: pointer;
 }
 
+.btn:active {
+  transform: translateY(2px);
+  filter: brightness(0.8);
+}
+
+.spinner {
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  font-size: 1.2rem;
+  cursor: wait;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.modal-Test {
+  height: 300px;
+  width: 100%;
+  background-color: red;
+}

@@ -70,18 +70,17 @@ export const dashboardCardData = [
   },
 ];
 
-
 export const deadlineTask = [
   
    {
      taskName: 'frontend dev',
      endDate: 'sun may 2023',
-     priority: 'high'
+     priority: 'mid'
    },
    {
      taskName: 'Backend dev',
      endDate: 'sun may 2023',
-     priority: 'high'
+     priority: 'mid'
    },
    {
      taskName: 'new button feature',
@@ -101,7 +100,170 @@ export const deadlineTask = [
    {
      taskName: 'Server Deployment',
      endDate: 'sun may 2023',
-     priority: 'high'
+     priority: 'mid'
    },
   
+]
+
+export const taskCardData = [
+  {
+    id: 1,
+    title: 'Task Title',
+    priority: 'mid',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'pending'
+  },
+  {
+  id: 2,
+  title: 'Task Title',
+  priority: 'mid',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'inProgress'
+  },
+  {
+    id: 3,
+    title: 'Task Title',
+    priority: 'low',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'pending'
+  },
+  {
+    id: 4,
+    title: 'Task Title',
+    priority: 'high',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'inProgress'
+  },
+  {
+    id: 5,
+    title: 'Task Title',
+    priority: 'high',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'pending'
+  },
+  {
+    id: 6,
+    title: 'Task Title',
+    priority: 'low',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'pending'
+  },
+  {
+    id: 7,
+    title: 'Task Title',
+    priority: 'low',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'approved'
+  },
+  {
+    id: 8,
+    title: 'Task Title',
+    priority: 'mid',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'completed'
+  },
+  {
+    id: 9,
+    title: 'Task Title',
+    priority: 'mid',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'completed'
+  },
+  {
+    id: 10,
+    title: 'Task Title',
+    priority: 'high',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'approved'
+  },
+  {
+    id: 11,
+    title: 'Task Title',
+    priority: 'high',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'completed'
+  },
+  {
+  id: 12,
+  title: 'Task Title',
+  priority: 'high',
+  desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+  endDate: 'May 13, 2023',
+  StartDate: 'Jun 13, 2023',
+  teamcount: 12,
+  status: 'completed'
+  },
+  {
+    id: 13,
+    title: 'Task Title',
+    priority: 'high',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'inProgress'
+  },
+  {
+    id: 14,
+    title: 'Task Title',
+    priority: 'high',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'inProgress'
+  },
+  {
+    id: 15,
+    title: 'Task Title',
+    priority: 'low',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'completed'
+  },
+  {
+    id: 16,
+    title: 'Task Title',
+    priority: 'mid',
+    desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.Deserunt possimus saepe tempore?",
+    endDate: 'May 13, 2023',
+    StartDate: 'Jun 13, 2023',
+    teamcount: 12,
+    status: 'inProgress'
+  },
 ]

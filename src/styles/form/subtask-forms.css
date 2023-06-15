@@ -1,0 +1,127 @@
+.subtask-checkbox {
+  padding: 0.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.5s ease;
+  /* opacity: 0; */
+}
+
+.subtask-checkbox .assign-members > div {
+  height: 20px;
+  width: 20px;
+  opacity: 0;
+  margin: 0;
+  margin-left: 0.75rem;
+  color: var(--light);
+}
+
+.subtask-checkbox:hover .assign-members > div {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.subtask-checkbox:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.checkbox-input-checked {
+  text-decoration: line-through;
+  padding: 0.25rem;
+  opacity: 0.75;
+}
+.checkbox-input {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+.checkbox-input input[type="checkbox"] {
+  margin-right: 0.5rem;
+  margin-top: 0.05rem;
+}
+
+/* Delete Modal */
+.delete-modal,
+.due-date-modal {
+  position: absolute;
+  color: var(--text-dark);
+  left: -200px;
+  bottom: 100%;
+  min-width: 200px;
+  padding: 0.25rem;
+  background-color: white;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 1px 1px 3px 2px rgba(0, 0, 0, 0.2);
+  font-size: 0.75rem;
+}
+
+.delete-modal > p > span {
+  color: var(--danger);
+}
+
+.delete-modal-btn,
+.set-date-btn {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.delete-modal-btn > button,
+.set-date-btn > button {
+  flex-basis: 48%;
+  padding: 0.25rem 1rem;
+  border-radius: 0.25rem;
+  color: var(--light);
+  background-color: var(--danger);
+}
+
+.delete-modal-btn > button:hover .set-date-btn > button:hover {
+  filter: brightness(0.9);
+}
+
+.delete-modal-btn > button[type="reset"],
+.set-date-btn > button[type="reset"] {
+  background-color: var(--theme-blue);
+}
+
+.due-date-modal > form > div {
+  margin-bottom: 0.5rem;
+}
+
+.due-date-modal > form > div > label {
+  margin-right: 0.5rem;
+}
+
+.edit-subtask-title {
+  display: flex;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 0.25rem;
+  height: 35px;
+}
+
+.edit-subtask-title input {
+  border: none !important;
+  outline: none;
+  width: 100%;
+}
+
+.edit-subtask-title > .edit-title-btns {
+  display: flex;
+}
+
+.edit-title-btns > button {
+  margin-left: 0.5rem;
+  background-color: var(--theme-blue);
+  padding: 0 0.5rem;
+  color: var(--light);
+}
+
+.edit-title-btns > button[type="reset"] {
+  background-color: var(--danger-dark);
+}

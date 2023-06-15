@@ -21,6 +21,7 @@
     background: var(--light);
     padding: 0 2rem;
     border-bottom: 1px solid var(--theme-light);
+    z-index: 3;
 
 }
 
@@ -33,9 +34,9 @@
 }
 
 .search_bar  input{
-    border: none;
-    outline: none;
-    padding: .25rem;
+    border: none !important;
+    outline: none !important;
+    padding: .25rem !important;
     height: 100%;
     min-width: 200px;
 }

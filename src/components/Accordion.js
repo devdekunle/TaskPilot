@@ -7,13 +7,13 @@ const Accordion = ({ title, total, children }) => {
 
   const handleToogle = () => setIsOpen(!isOpen);
   return (
-    <div className={`accordion `}>
+    <div className="accordion">
       <div className="accordion-header">
         <div className="accordion-toogle" onClick={handleToogle}>
           <BsCaretDownSquare className={`${isOpen && "angle"}`} />
         </div>
         <div className="accordion-title">
-          <p>{title}</p> <span>({total})</span>
+          <p>{title}</p> <span>{`( ${total} )`}</span>
         </div>
 
         <div

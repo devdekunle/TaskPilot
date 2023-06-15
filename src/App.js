@@ -1,19 +1,18 @@
-import { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { RouterProvider } from "react-router-dom";
-import { unProtectedRoutes, ProtectedRoutes } from "./router/routes";
+import { unProtectedRoutes } from "./router/routes";
+
+
 
 function App() {
-  const [user, setUser] = useState(true);
+
   return (
-    <div style={{ position: "relative" }}>
-      {user ? (
-        <RouterProvider router={ProtectedRoutes} />
-      ) : (
+    <>
+      <div style={{ position: "relative" }}>
         <RouterProvider router={unProtectedRoutes} />
-      )}
-      <ToastContainer />
-    </div>
+        <ToastContainer />
+      </div>
+    </>
   );
 }
 

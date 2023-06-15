@@ -24,14 +24,13 @@ const Dashboard = () => {
           </div>
 
           <ul className="list_items">
-            {
-              deadlineTask.map((list, index) =>  <ExpirationDateList  {...list} key={index} sN={index + 1}/>)
-            }
-           
+            {deadlineTask.map((list, index) => (
+              <ExpirationDateList {...list} key={index} sN={index + 1} />
+            ))}
           </ul>
         </div>
 
-        <div className="other-analysis"></div>
+        <div className="other-analysis">Over Due Tasks</div>
       </div>
     </div>
   );

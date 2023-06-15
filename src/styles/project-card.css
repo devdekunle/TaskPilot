@@ -1,37 +1,67 @@
-.project-card{
-    height: 200px;
-    flex-basis: calc(33.33% - 2rem);
-    border-radius: .25rem;
-    padding: 1rem;
-    box-shadow: 0 0 12px 3px rgba(0, 0, 0, .1);
-    position: relative;
-    margin: 1rem;
-    background-color: white;
-
+.project-card {
+  height: 200px;
+  flex-basis: calc(33.33% - 2rem);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  margin: 1rem;
+  background-color: white;
+  cursor: pointer;
+  padding-top: 0.25rem;
 }
 
-.project-card > div.form-action{
-    display: flex;
-    width: 100%;
-    padding: .5rem 1rem;
-    position: absolute;
-    bottom: .25rem;
-    left: 0;
-    border-top: 2px solid #ccc;
-    justify-content: space-between;
+.project-info > h2.header {
+  margin-bottom: 0.75rem;
 }
 
-
-div.form-action > p{
-    padding-right: 2rem ;
-    border-right: 2px solid grey;
+.project-info > h5 > span {
+  font-weight: 300;
+}
+.project-card-skeleton {
+  flex-basis: calc(33.33% - 2rem);
+  box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.1);
+  margin: 1rem;
+  height: 200px;
+  padding: 1rem;
+  padding: 0.5rem;
 }
 
-div.form-action > p:last-child{
-    padding: 0;
-    border: none;
+.project-card > div.form-action {
+  display: flex;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  position: absolute;
+  bottom: 0.25rem;
+  left: 0;
+  justify-content: space-between;
+}
+
+div.form-action > p {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  justify-content: center;
+}
+
+div.form-action > p:active {
+  transform: translateY(2px);
+  filter: brightness(1.1);
+  transition: all 0.1s linear !important;
 }
 
 div.form-action > p > span {
-    margin-left: .5rem;
+  margin-left: 0.5rem;
+}
+
+div.form-action:hover > p {
+  background-color: rgba(0, 0, 0, 0.2);
+  transition: all 0.5s ease-in-out;
+}
+
+div.form-action > p:hover {
+  background-color: white;
 }

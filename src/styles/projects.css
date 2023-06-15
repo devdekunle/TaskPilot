@@ -1,33 +1,53 @@
-.projects{
-    flex: 1;
-    padding: 2rem;
-    padding-top: 4rem;
-    display: flex;
-    /* justify-content: space-between; */
-    flex-wrap: wrap;
-    position: relative;
-    margin-top: 70px;
-    width: 100%;
-
+.projects {
+  /* flex: 1; */
+  padding: 2rem;
+  padding-top: 4rem;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  margin-top: 70px;
+  width: 100%;
+  color: var(--text-dark);
+  user-select: none;
+  min-height: 100vh;
 }
 
-.add_project_btn{
-    position: absolute;
-    top: 1rem;
-    right: 2rem;
-    background-color: var(--theme-blue);
-    padding: .5rem 2rem;
-    color: var(--theme-light)
+.add_project_btn {
+  position: fixed;
+  top: 5rem;
+  right: 2rem;
+  background-color: var(--theme-blue);
+  padding: 0.5rem 2rem;
+  color: var(--theme-light);
+  z-index: 1;
+  font-weight: 700;
 }
 
-.projects > div.filter{
-    position: absolute;
-    top: 1rem
+.projects > div.filter {
+  position: fixed;
+  top: 5rem;
+  z-index: 1;
+  background-color: var(--light);
 }
 
-.projects > div.filter  select{
-    border: 1px solid grey;
-    outline: none;
-    width: 200px;
-    padding: .25rem;
+.projects > div.filter select {
+  border: 1px solid grey;
+  outline: none;
+  width: 200px;
+  padding: 0.25rem;
+}
+
+.project-cards {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.empty-project {
+  position: absolute;
+  height: 80vh;
+  width: calc(100% - 4rem);
+  margin-top: 4rem;
+  font-size: 3rem;
+  text-align: center;
 }

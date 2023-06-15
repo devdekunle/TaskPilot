@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark, faBars, faSignIn, faHome, faPhoneSquare, faFileCode, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faXmark,
+  faBars,
+  faSignIn,
+  faHome,
+  faPhoneSquare,
+  faFileCode,
+  faInfoCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import "../styles/navbar.css";
 
 const Navbar = () => {
@@ -28,7 +36,9 @@ const Navbar = () => {
         } navbar-desktop`}
       >
         <p className="logo">
-          LOGO{" "}
+          <p>
+            Task<span>Pilot</span>
+          </p>
           <FontAwesomeIcon
             className="close-icon"
             onClick={toogleNav}
@@ -38,25 +48,25 @@ const Navbar = () => {
         <ul>
           <li>
             <NavLink to="/" onClick={toogleNav}>
-            <FontAwesomeIcon icon={faHome} className="navlink_icon" />
+              <FontAwesomeIcon icon={faHome} className="navlink_icon" />
               Home
             </NavLink>
           </li>
           <li>
             <NavLink to="/contact" onClick={toogleNav}>
-            <FontAwesomeIcon icon={faPhoneSquare} className="navlink_icon" />
+              <FontAwesomeIcon icon={faPhoneSquare} className="navlink_icon" />
               Contact
             </NavLink>
           </li>
           <li>
             <NavLink to={"/about"} onClick={toogleNav}>
-            <FontAwesomeIcon icon={faInfoCircle} className="navlink_icon" />
+              <FontAwesomeIcon icon={faInfoCircle} className="navlink_icon" />
               About
             </NavLink>
           </li>
           <li>
             <NavLink to={"/dev"} onClick={toogleNav}>
-            <FontAwesomeIcon icon={faFileCode} className="navlink_icon" />
+              <FontAwesomeIcon icon={faFileCode} className="navlink_icon" />
               Dev
             </NavLink>
           </li>
@@ -64,7 +74,7 @@ const Navbar = () => {
 
         <div className="navbar-login">
           <NavLink to={"/auth"} onClick={toogleNav}>
-          <FontAwesomeIcon icon={faSignIn} className="navlink_icon" />
+            <FontAwesomeIcon icon={faSignIn} className="navlink_icon" />
             login / sign up
           </NavLink>
         </div>

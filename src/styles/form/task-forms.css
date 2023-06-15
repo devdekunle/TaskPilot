@@ -1,0 +1,81 @@
+.create-task-form {
+  width: 100%;
+  padding: 0.5rem;
+  padding-top: 0;
+  color: var(--text-dark);
+  max-width: 340px;
+  padding-bottom: 3rem;
+}
+
+.create-task-form > h2 {
+  margin-bottom: 0.25rem;
+}
+
+.create-task-form input,
+.create-task-form textarea {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  width: 100%;
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 1rem;
+  padding: 0.25rem;
+  padding-bottom: 0;
+  transition: all 0.5s linear;
+}
+
+.create-task-form textarea {
+  border: 1px solid lightgray;
+  height: 100px;
+}
+
+.create-task-form button {
+  width: calc(100% - 1rem);
+  background-color: var(--theme-blue);
+  padding: 0.5rem;
+  color: white;
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+}
+
+.create-task-form input:focus {
+  border-bottom: 1px solid var(--theme-blue);
+}
+.create-task-form textarea:focus {
+  border: 1px solid var(--theme-blue);
+}
+
+.create-task-form label {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.radio-btns {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.radio-btns > h5 {
+  width: 100%;
+}
+
+.radio-btn > label {
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+
+.radio-btn > label > input {
+  margin-left: 0.25rem;
+  margin-right: 2rem;
+  margin-top: 0.5rem;
+  border: 2px solid red;
+}
+
+input[type="radio"] {
+  position: relative;
+  top: .25rem;
+}
