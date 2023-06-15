@@ -59,10 +59,13 @@ def user_projects(current_user):
     """
     retrieve all projects that the user is a part of
     """
-    all_projects = [project.project.to_dict() for project in current_user.projects]
-    projects_count = len(all_projects)
+
+    projects = [project.project for project in current_user.projects]
+    sorted_projects = sorted(projects, key=lambda p: p.create_time, reverse=True)
+    project_list = [project.to_dict() for project in sorted_projects]
+    projects_count = len(project_list)
     projects_stats = {
-        "projects": all_projects,
+        "projects": project_list,
         "projects_count": projects_count
     }
     return make_response(jsonify(projects_stats)), 200
