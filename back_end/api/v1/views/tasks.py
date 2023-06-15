@@ -83,11 +83,15 @@ def get_project_tasks(current_user, project_id):
     """
     get the tasks for a project
     """
-    all_t_u = current_user.tasks
-    if all_t_u is not None:
-        list_task = [t_u.task.to_dict() for t_u in current_user.tasks \
+    tasks = [t_u.task for t_u in current_user.tasks \
                 if t_u.task.project_id == project_id]
-    return make_response(jsonify(list_task)), 200
+    sorted_tasks = sorted(tasks, key=lambda t: t.create_time, reverse=True)
+    task_list = [task.to_dict() for task in sorted_tasks]
+    task_stat = {
+        'tasks': task_list,
+        'task_count': len(task_list)
+    }
+    return make_response(jsonify(task_stat)), 200
 
 @api_blueprint.route('/tasks/<task_id>', methods=['GET'])
 @user_status
