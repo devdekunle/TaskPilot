@@ -76,3 +76,48 @@ def get_task_comments(current_user, task_id):
     sorted_comments = sorted(comments, key=lambda c: c.create_time)
     comment_list = [comment.to_dict() for comment in sorted_comments]
     return make_response(jsonify(comment_list)), 200
+
+@api_blueprint.route('/users/<user_id>/tasks/<task_id>/comments/<comment_id>',
+                    methods=['PUT'])
+@user_status
+def edit_comment(current_user, task_id, user_id, comment_id):
+    """
+    edit a comment
+    """
+
+    data = request.get_json()
+    if not data:
+        abort(400, 'Not a Json object')
+    if 'text' not in data:
+        return make_response(jsonify({'error': 'text missing'})), 400
+
+    task = storage.get(Task, task_id)
+    if not task:
+        response = {
+            'Status': 'Error',
+            'Message': 'task not found'
+        }
+        return make_response(jsonify(response)), 404
+    for comment in task.comments:
+        if commment.id == comment_id:
+            break
+
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'comment not found'
+        }
+        return make_response(jsonify(response)), 404
+
+    if comment.user_id == user_id:
+        for key, value in data.items():
+            if key == 'text':
+                setattr(comment, key, value)
+                comment.update()
+                return make_response(jsonify(comment.to_dict())), 200
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'Permission Denied, comment not made by you'
+        }
+        return make_response(jsonify(response)), 403
