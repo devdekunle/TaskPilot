@@ -112,3 +112,39 @@ def edit_comment(current_user, project_id, user_id, comment_id):
         "Status": "Fail",
         "Message": "project not found"}
         return make_response(jsonify(response)), 404
+
+@api_blueprint.route('/users/<user_id>/projects/<project_id>/comments/<comment_id>',
+                    methods=['DELETE'])
+@user_status
+def delete_comment(current_user, project_id, user_id, comment_id):
+    """
+    edit a comment
+    """
+    project = storage.get(Project, project_id)
+    if project:
+        for comment in project.comments:
+            if comment.id == comment_id:
+                break
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'comment not found'
+            }
+            return make_response(jsonify(response)), 404
+
+        if comment.user_id == user_id:
+            storage.delete(comment)
+            storage.save()
+            return make_response(), 204
+        else:
+            response = {
+                "Status": "Fail",
+                "Message": "Permission Denied, Comment not made by you"
+            }
+            return make_response(jsonify(response)), 403
+    else:
+        response = {
+        "Status": "Fail",
+        "Message": "project not found"}
+        return make_response(jsonify(response)), 404
+
