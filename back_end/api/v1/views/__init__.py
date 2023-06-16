@@ -13,3 +13,4 @@ from api.v1.views.projects import *
 from api.v1.views.tasks import *
 from api.v1.views.subtasks import *
 from api.v1.views.project_comment import *
+from api.v1.views.task_comment import *
