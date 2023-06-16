@@ -105,7 +105,6 @@ def invite_member(current_user, sender_id, project_id):
                         sender="taskpilot0@gmail.com",
                         text_body="Click to join project {}",
                         link=link,
-                        token=auth_token.decode('utf-8')
                         )
                     return make_response(jsonify(mail_response)), 200
                 except Exception as error:
