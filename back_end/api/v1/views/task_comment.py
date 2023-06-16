@@ -75,12 +75,16 @@ def get_task_comments(current_user, task_id):
     comments = task.comments
     sorted_comments = sorted(comments, key=lambda c: c.create_time)
     comment_list = [comment.to_dict() for comment in sorted_comments]
-    return make_response(jsonify(comment_list)), 200
+    comment_stat = {
+        'comment_count': len(comment_list),
+        'comments': comment_list
+    }
+    return make_response(jsonify(comment_stat)), 200
 
 @api_blueprint.route('/users/<user_id>/tasks/<task_id>/comments/<comment_id>',
                     methods=['PUT'])
 @user_status
-def edit_comment(current_user, task_id, user_id, comment_id):
+def edit_task_comment(current_user, task_id, user_id, comment_id):
     """
     edit a comment
     """
@@ -115,6 +119,42 @@ def edit_comment(current_user, task_id, user_id, comment_id):
                 setattr(comment, key, value)
                 comment.update()
                 return make_response(jsonify(comment.to_dict())), 200
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'Permission Denied, comment not made by you'
+        }
+        return make_response(jsonify(response)), 403
+
+@api_blueprint.route('/users/<user_id>/tasks/<task_id>/comments/<comment_id>',
+                    methods=['DELETE'])
+@user_status
+def delete_task_comment(current_user, task_id, user_id, comment_id):
+    """
+    edit a comment
+    """
+    task = storage.get(Task, task_id)
+    if not task:
+        response = {
+            'Status': 'Error',
+            'Message': 'task not found'
+        }
+        return make_response(jsonify(response)), 404
+    for comment in task.comments:
+        if commment.id == comment_id:
+            break
+
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'comment not found'
+        }
+        return make_response(jsonify(response)), 404
+
+    if comment.user_id == user_id:
+        storage.delete(comment)
+        storage.save()
+        return make_response(), 204
     else:
         response = {
             'Status': 'Fail',

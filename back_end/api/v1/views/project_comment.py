@@ -13,7 +13,7 @@ from flask import abort, make_response, request, jsonify
 @api_blueprint.route('/users/<user_id>/projects/<project_id>/comments/',
                       methods=['POST'])
 @user_status
-def create_comment(current_user, user_id, project_id):
+def create_project_comment(current_user, user_id, project_id):
     """
     write a comment
     """
@@ -69,12 +69,16 @@ def get_project_comments(current_user, project_id):
     comments = project.comments
     sorted_comments = sorted(comments, key=lambda c: c.create_time)
     comment_list = [comment.to_dict() for comment in sorted_comments]
-    return make_response(jsonify(comment_list)), 200
+    comment_stat = {
+        'comment_count': len(comment_list),
+        'comments': comment_list
+    }
+    return make_response(jsonify(comment_stat)), 200
 
 @api_blueprint.route('/users/<user_id>/projects/<project_id>/comments/<comment_id>',
                     methods=['PUT'])
 @user_status
-def edit_comment(current_user, project_id, user_id, comment_id):
+def edit_project_comment(current_user, project_id, user_id, comment_id):
     """
     edit a comment
     """
@@ -116,7 +120,7 @@ def edit_comment(current_user, project_id, user_id, comment_id):
 @api_blueprint.route('/users/<user_id>/projects/<project_id>/comments/<comment_id>',
                     methods=['DELETE'])
 @user_status
-def delete_comment(current_user, project_id, user_id, comment_id):
+def delete_project_comment(current_user, project_id, user_id, comment_id):
     """
     edit a comment
     """
