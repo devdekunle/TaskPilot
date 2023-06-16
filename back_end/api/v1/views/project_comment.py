@@ -71,4 +71,44 @@ def get_project_comments(current_user, project_id):
     comment_list = [comment.to_dict() for comment in sorted_comments]
     return make_response(jsonify(comment_list)), 200
 
+@api_blueprint.route('/users/<user_id>/projects/<project_id>/comments/<comment_id>',
+                    methods=['PUT'])
+@user_status
+def edit_comment(current_user, project_id, user_id, comment_id):
+    """
+    edit a comment
+    """
+    data = request.get_json()
+    if not data:
+        abort(400, 'Not a json object')
+    if 'text' not in data:
+        return make_response(jsonify({'error': 'text missing'}))
+    project = storage.get(Project, project_id)
+    if project:
+        for comment in project.comments:
+            if comment.id == comment_id:
+                break
+        else:
+            response = {
+                'Status': 'Fail',
+                'Message': 'comment not found'
+            }
+            return make_response(jsonify(response)), 404
 
+        if comment.user_id == user_id:
+            for key, value in data.items():
+                if key == 'text':
+                    setattr(comment, key, value)
+                    comment.update()
+                    return make_response(jsonify(comment.to_dict())), 200
+        else:
+            response = {
+                "Status": "Fail",
+                "Message": "Permission Denied, Comment not made by you"
+            }
+            return make_response(jsonify(response)), 403
+    else:
+        response = {
+        "Status": "Fail",
+        "Message": "project not found"}
+        return make_response(jsonify(response)), 404

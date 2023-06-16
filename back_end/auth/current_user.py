@@ -29,7 +29,7 @@ def user_status(f):
             else:
                 response = {
                     'status': 'fail',
-                    'message': str(user_data)
+                    'message': user_data
                 }
                 return make_response(jsonify(response)), 403
         else:
