@@ -131,7 +131,7 @@ def get_task_member(current_user, user_id, task_id):
 @user_status
 def get_subtask_members(current_user, subtask_id):
     """
-    Get all members in a task
+    Get all members in a subtask
     """
     subtask = storage.get(SubTask, subtask_id)
     if subtask:

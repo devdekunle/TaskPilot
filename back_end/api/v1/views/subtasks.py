@@ -104,12 +104,7 @@ def get_task_subtasks(current_user, task_id):
                 if s_u.subtask.task_id == task_id]
     sorted_subtasks = sorted(subtasks, key=lambda s: s.create_time, reverse=True)
     subtask_list = [subtask.to_dict() for subtask in sorted_subtasks]
-    subtask_stats = {
-        'subtasks': subtask_list,
-        'subtask_count': len(subtask_list)
-
-    }
-    return make_response(jsonify(subtask_stats)), 200
+    return make_response(jsonify(subtask_list)), 200
 
 @api_blueprint.route('/subtasks/<subtask_id>', methods=['GET'])
 @user_status
