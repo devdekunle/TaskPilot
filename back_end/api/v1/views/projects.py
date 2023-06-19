@@ -10,6 +10,7 @@ from auth.current_user import user_status
 from flask import jsonify, abort, make_response, request
 from flask.views import MethodView
 from api.v1.views import api_blueprint
+from models.invitation import Invitation
 
 
 @api_blueprint.route('/projects/users/<user_id>', methods=['POST'])
@@ -90,27 +91,38 @@ def delete_project(current_user, project_id, user_id):
     else:
         return(make_response(jsonify({'error': 'project_id missing'}))), 404
 
+    invite_objs = storage.all(Invitation).values()
+    for iv in invite_objs:
+        if iv.project_id == project_id:
+            break
+
     # get association objects between user and projects
     all_p_u = project.members
 
     # check if member is permitted to delete
     for p_u in all_p_u:
         # check association table for user and project
-        if p_u.project.id == project_id:
-            # check user role
-            if p_u.user_id == user_id and p_u.member_role == 'admin':
-                current_user.projects.remove(p_u)
+        if p_u.project_id == project_id and p_u.user_id == user_id:
+            break
+    else:
+        response = {
+            'Status': 'Fail',
+            'Message': 'User not a part of the project'
+        }
+        return make_response(jsonify(response)), 404
+    if p_u.member_role == 'admin':
+        for pr_u in project.members:
+            if pr_u.project_id == project_id:
+                for iv in storage.all(Invitation).values():
+                    if iv.project_id == project_id:
+                        storage.delete(iv)
+                project.members.remove(p_u)
                 storage.delete(p_u)
-            else:
-                return make_response(jsonify({'error': 'Permission denied'})), 403
-
-        else:
-            continue
-    storage.delete(project)
-    storage.save()
-    return make_response(jsonify({'status': 'Project deleted'})), 204
-
-
+        storage.delete(project)
+        storage.save()
+        return make_response(jsonify({'status': 'Project deleted'})), 204
+    else:
+        return make_response(jsonify({'error': 'Permission denied'})), 403
 
 @api_blueprint.route('/projects/<project_id>/users/<user_id>', methods=['PUT'])
 @user_status
