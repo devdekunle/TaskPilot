@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import formatDate from "../utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import { BsTrash, BsPen } from "react-icons/bs";
+import { FaUserPlus } from "react-icons/fa";
 import "../styles/project-card.css";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useDispatch, useSelector } from "react-redux";
 import Modal from "./Modal";
-import { DeleteProject, UpdateProject } from "./forms/projectPageForms";
+import {
+  DeleteProject,
+  InviteProjectMember,
+  UpdateProject,
+} from "./forms/projectPageForms";
+import { fetchProjectMembers } from "../store/slices/userSlice";
 
 export const CardSkeleton = ({ cards }) => {
   return Array(cards)
@@ -37,8 +44,21 @@ const ProjectCard = ({
   id: projectId,
   completed,
   description,
+  userId,
+  token,
 }) => {
   const navigate = useNavigate();
+  const [admin, setAdmin] = useState(false);
+
+  const dispatch = useDispatch();
+  const members = useSelector((state) => state?.members);
+  useEffect(() => {
+    dispatch(fetchProjectMembers({ projectId, token }));
+  }, [dispatch, token, projectId]);
+
+  // if user is an admin
+
+  const { projectMembers } = members;
 
   // Format Date
   const createdAt = formatDate(create_time, "EEE, dd MMM yyyy");
@@ -48,6 +68,8 @@ const ProjectCard = ({
   // Handle Modal
   const [isOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalcontent] = useState(null);
+
+  // Handle Modal
   const handleModalOpen = () => {
     setIsModalOpen(true);
   };
@@ -75,6 +97,17 @@ const ProjectCard = ({
           setIsModalOpen={setIsModalOpen}
           end_date={end_date}
           start_date={start_date}
+        />
+      );
+    } else if (action === "invite-member") {
+      setModalcontent(
+        <InviteProjectMember
+          handleModalClose={handleModalClose}
+          setIsModalOpen={setIsModalOpen}
+          userId={userId}
+          projectId={projectId}
+          token={token}
+          title={title}
         />
       );
     }
@@ -113,21 +146,29 @@ const ProjectCard = ({
           </h5>
         </div>
         <div className="form-action">
-          <p>
+          <div>
             <FontAwesomeIcon icon={faUsers} className="card_icon" />
             <span>{team}</span>
-          </p>
-          <p>
+          </div>
+          <div>
             <FontAwesomeIcon icon={faMessage} className="card_icon" />
             <span>{message}</span>
-          </p>
+          </div>
 
-          <p onClick={() => handleShowModal("delete")}>
-            <BsTrash className="card_icon" />
-          </p>
-          <p onClick={() => handleShowModal("update")}>
+          {
+            <div onClick={() => handleShowModal("delete")}>
+              <BsTrash className="card_icon" />
+            </div>
+          }
+          <div onClick={() => handleShowModal("update")}>
             <BsPen className="card_icon" />
-          </p>
+          </div>
+          <div className="invite-member">
+            <FaUserPlus
+              className="card_icon invite-member-icon"
+              onClick={() => handleShowModal("invite-member")}
+            />
+          </div>
         </div>
       </div>
     </>

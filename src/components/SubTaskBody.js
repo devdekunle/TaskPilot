@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "../styles/subtask.css";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTask } from "../store/slices/taskSlice";
-import { createSubTask, fetchSubTasks } from "../store/slices/subTaskSlice";
+import { fetchSubTasks } from "../store/slices/subTaskSlice";
 import {
   CheckSubTaskBox,
   CreateSubTask,
   RichTexteditor,
 } from "./forms/subTaskForm";
-import { progress } from "framer-motion";
 
-const SubTaskBody = ({ taskTitle, description, taskId }) => {
+const SubTaskBody = ({
+  taskTitle,
+  description,
+  taskId,
+  taskCompleteHandler,
+  taskStatus,
+}) => {
   const [subTaskProgress, setSubTaskProgress] = useState(0);
   const dispatch = useDispatch();
   const { userData, token } = useSelector((state) => state?.auth);
@@ -24,7 +28,12 @@ const SubTaskBody = ({ taskTitle, description, taskId }) => {
         (subTask) => subTask.completed
       ).length;
 
-      setSubTaskProgress((completedTasksCount / subTasksLength) * 100);
+      if (subTasksLength === 0) {
+        setSubTaskProgress(0);
+      } else {
+        setSubTaskProgress((completedTasksCount / subTasksLength) * 100);
+        taskCompleteHandler(subTaskProgress);
+      }
     }
   };
 
@@ -35,7 +44,6 @@ const SubTaskBody = ({ taskTitle, description, taskId }) => {
 
   useEffect(() => {
     handleTaskProgress();
-    // console.log(subTaskProgress);
   }, [dispatch, token, subTasks, subTaskProgress]);
 
   return (
@@ -52,10 +60,11 @@ const SubTaskBody = ({ taskTitle, description, taskId }) => {
       {/* Task Progress */}
       <div className="task-progress">
         <h3>
-          Task Progress - <span>{`${subTaskProgress.toPrecision(3)}%`}</span>
+          Task Progress -{" "}
+          <span>{`${subTaskProgress.toPrecision(3) || 0}%`}</span>
         </h3>
         <div className="task-progress-bar">
-          <span style={{ width: `${subTaskProgress}%` }}></span>
+          <span style={{ width: `${subTaskProgress || 0}%` }}></span>
         </div>
       </div>
 
@@ -63,14 +72,24 @@ const SubTaskBody = ({ taskTitle, description, taskId }) => {
       <div className="check-sub-task">
         {subTasks.map((subtask) => {
           return (
-            <CheckSubTaskBox {...subtask} key={subtask.id} token={token} />
+            <CheckSubTaskBox
+              {...subtask}
+              key={subtask.id}
+              token={token}
+              taskStatus={taskStatus}
+            />
           );
         })}
       </div>
 
       {/* Add Task */}
 
-      <CreateSubTask userId={userId} token={token} taskId={taskId} />
+      <CreateSubTask
+        userId={userId}
+        token={token}
+        taskId={taskId}
+        taskStatus={taskStatus}
+      />
     </div>
   );
 };

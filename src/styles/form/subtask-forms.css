@@ -64,7 +64,7 @@
 }
 
 .delete-modal-btn,
-.set-date-btn {
+.set-date-btns {
   margin-top: 0.5rem;
   display: flex;
   justify-content: space-between;
@@ -72,7 +72,7 @@
 }
 
 .delete-modal-btn > button,
-.set-date-btn > button {
+.set-date-btns > button {
   flex-basis: 48%;
   padding: 0.25rem 1rem;
   border-radius: 0.25rem;
@@ -85,15 +85,15 @@
 }
 
 .delete-modal-btn > button[type="reset"],
-.set-date-btn > button[type="reset"] {
+.set-date-btns > button[type="button"] {
   background-color: var(--theme-blue);
 }
 
-.due-date-modal > form > div {
+.due-date-modal > .form-control {
   margin-bottom: 0.5rem;
 }
 
-.due-date-modal > form > div > label {
+.due-date-modal > .form-control > div > label {
   margin-right: 0.5rem;
 }
 

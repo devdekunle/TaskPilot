@@ -65,7 +65,7 @@ export const Radio = ({ children, ...props }) => {
   return (
     <div className="radio-btn">
       <label className="radio-input">
-        {children}
+        <span>{children}</span>
         <input type="radio" {...field} {...props} />
       </label>
       {meta.touched && meta.error ? (

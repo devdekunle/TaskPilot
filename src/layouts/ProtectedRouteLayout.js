@@ -4,7 +4,6 @@ import { TextInput } from "../components/forms/formElements";
 import SideNav from "../components/SideNav";
 import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
-
 import "../styles/protected-page.css";
 import { BsSearch, BsBell } from "react-icons/bs";
 

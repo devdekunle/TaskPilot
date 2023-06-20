@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { FaAward, FaSpinner } from "react-icons/fa";
 import Modal from "./Modal";
+import formatDate from "../utils/utils";
 import { DeleteTask, UpdateTask } from "./forms/taskPageForms";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -30,77 +32,70 @@ const TaskCard = ({
   btnTextNext,
   status,
   id: taskId,
+  completed,
 }) => {
   const dispatch = useDispatch();
   const { isLoading, isError } = useSelector((state) => state?.tasks);
   const { userData, token } = useSelector((state) => state?.auth);
   const { id: userId } = userData;
+  const [modalContent, setModalContent] = useState(null);
+
+  // handle Task Progress
+  const taskCompleteHandler = (completedSubTask) => {
+    if (completedSubTask === 100) {
+      dispatch(
+        updateTask({ taskId, userId, token, values: { completed: true } })
+      );
+    } else {
+      dispatch(
+        updateTask({ taskId, userId, token, values: { completed: false } })
+      );
+    }
+  };
+
+  // Format date
+  const startDate = formatDate(start_date, "EEE, dd MMM yyyy");
+  const endDate = formatDate(end_date, "EEE, dd MMM yyyy");
+
   // handle main and subTask-modal
-  const [isOpen, setIsModalOpen] = useState(
-    localStorage.getItem("modalOpen") === "true"
-  );
+  const [isOpen, setIsModalOpen] = useState(() => {
+    if (
+      taskId === localStorage.getItem("taskId") &&
+      localStorage.getItem("modalOpen")
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+  // const clickTaskId = localStorage.getItem("taskId");
 
-  const [modalContent, setModalcontent] = useState(
-    <SubTaskBody
-      taskId={taskId}
-      isError={isError}
-      taskTitle={title}
-      setIsModalOpen={setIsModalOpen}
-      description={description}
-    />
-  );
-
-  // handle Main Modal
-  const handleModalOpen = () => {
-    setIsModalOpen(true);
-  };
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-    localStorage.removeItem("modalOpen");
-  };
-
-  // Handle Delete and Task Update
-  const handleShowModal = (action) => {
-    handleModalOpen();
-    if (action === "delete") {
-      setModalcontent(
-        <DeleteTask
-          taskId={taskId}
-          title={title}
-          setIsModalOpen={setIsModalOpen}
-        />
-      );
-    } else if (action === "update") {
-      setModalcontent(
-        <UpdateTask
-          taskId={taskId}
-          title={title}
-          setIsModalOpen={setIsModalOpen}
-          description={description}
-          priority={priority}
-          start_date={start_date}
-          end_date={end_date}
-        />
-      );
-    } else if (action === "show") {
-      localStorage.setItem("modalOpen", "true");
-
-      setModalcontent(
+  useEffect(() => {
+    if (isOpen && taskId === localStorage.getItem("taskId")) {
+      setIsModalOpen(true);
+      setModalContent(
         <SubTaskBody
           taskId={taskId}
           isError={isError}
           taskTitle={title}
           setIsModalOpen={setIsModalOpen}
           description={description}
+          taskCompleteHandler={taskCompleteHandler}
+          taskStatus={status}
         />
       );
-      // setModalcontent(
-      //   <SubTaskBody
-      //     description={description}
-      //     taskId={taskId}
-      //   />
-      // );
     }
+  }, [taskId, isError, title, description]);
+
+  // handle Main Modal
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+  // Handle Modal close
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    localStorage.removeItem("modalOpen");
+    localStorage.removeItem("taskId");
   };
 
   // Handle Card Progress (Pending -> <- ongoing -> <- completed -> approved)
@@ -124,6 +119,7 @@ const TaskCard = ({
         dispatch(
           updateTask({ taskId, userId, token, values: { status: "ongoing" } })
         );
+        toast.success("Successful");
         setIsModalOpen(false);
       } catch (error) {
         toast.error(error.message);
@@ -134,6 +130,7 @@ const TaskCard = ({
         dispatch(
           updateTask({ taskId, userId, token, values: { status: "completed" } })
         );
+        toast.success("Successful");
         setIsModalOpen(false);
       } catch (error) {
         toast.error(error.message);
@@ -145,6 +142,7 @@ const TaskCard = ({
           updateTask({ taskId, userId, token, values: { status: "approved" } })
         );
         setIsModalOpen(false);
+        toast.success("Successful");
       } catch (error) {
         toast.error(error.message);
       }
@@ -154,10 +152,50 @@ const TaskCard = ({
         dispatch(
           updateTask({ taskId, userId, token, values: { status: "pending" } })
         );
+        toast.success("Successful");
         setIsModalOpen(false);
       } catch (error) {
         toast.error(error.message);
       }
+    }
+  };
+  // Handle Delete,  Task Update and SubTask
+  const handleShowModal = (action) => {
+    handleModalOpen();
+    if (action === "delete") {
+      setModalContent(
+        <DeleteTask
+          taskId={taskId}
+          title={title}
+          setIsModalOpen={setIsModalOpen}
+        />
+      );
+    } else if (action === "update") {
+      setModalContent(
+        <UpdateTask
+          taskId={taskId}
+          title={title}
+          setIsModalOpen={setIsModalOpen}
+          description={description}
+          priority={priority}
+          start_date={start_date}
+          end_date={end_date}
+        />
+      );
+    } else if (action === "show") {
+      localStorage.setItem("modalOpen", "true");
+      localStorage.setItem("taskId", taskId);
+
+      setModalContent(
+        <SubTaskBody
+          taskId={taskId}
+          isError={isError}
+          taskTitle={title}
+          setIsModalOpen={setIsModalOpen}
+          description={description}
+          taskCompleteHandler={taskCompleteHandler}
+        />
+      );
     }
   };
 
@@ -180,8 +218,21 @@ const TaskCard = ({
               className="show-subTask-modal"
               onClick={() => handleShowModal("show")}
             >
-              <div className="date">
-                {start_date} - {end_date}
+              <div className="dates">
+                <h5>
+                  Start date: <span>{startDate}</span>
+                </h5>
+                <h5>
+                  End State: <span>{endDate}</span>
+                </h5>
+              </div>
+
+              <div className="is-completed-badge">
+                {completed && (
+                  <p>
+                    <FaAward /> Task Completed
+                  </p>
+                )}
               </div>
             </div>
             <div className="action_btns_2">
@@ -224,18 +275,26 @@ const TaskCard = ({
           </div>
         </div>
 
-        <div
-          className={` task_card_btn btn-${status} ${isLoading && "disabled"}`}
-          onClick={handleTaskProgress}
-        >
-          <button className="btn">{btnTextBack || btnText}</button>
-          <button className={`btn btn2-${status} second-btn`}>
-            {btnTextNext}
-          </button>
-          <span className={`arrowRight-${status}`}>
-            <FaArrowRight />
-          </span>
-        </div>
+        {isLoading ? (
+          <div style={{ textAlign: "center" }}>
+            <FaSpinner className="spinner" />
+          </div>
+        ) : (
+          <div
+            className={` task_card_btn btn-${status} ${
+              isLoading && "disabled"
+            }`}
+            onClick={handleTaskProgress}
+          >
+            <button className="btn">{btnTextBack || btnText}</button>
+            <button className={`btn btn2-${status} second-btn`}>
+              {btnTextNext}
+            </button>
+            <span className={`arrowRight-${status}`}>
+              <FaArrowRight />
+            </span>
+          </div>
+        )}
       </motion.div>
     </>
   );

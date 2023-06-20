@@ -106,6 +106,7 @@ export const fetchTasksApi = async (projectId, token) => {
         },
       }
     );
+    console.log(response.data);
     return response;
   } catch (error) {
     throw error;
@@ -265,6 +266,7 @@ export const updateSubTaskApi = async (subTaskId, token, values) => {
         },
       }
     );
+
     return response;
   } catch (error) {
     throw error;

@@ -1,0 +1,16 @@
+.calendar {
+  width: 100%;
+  margin-top: 70px;
+  padding: 1rem 2rem;
+  height: calc(100vh - 70px);
+  color: black !important;
+}
+
+.calendar .fc-daygrid-day-number {
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+.calendar .fc-event-title {
+  color: var(--text-dark);
+}

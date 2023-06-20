@@ -165,4 +165,5 @@ export const selectFilteredTasks = (filter) =>
     (tasks) => tasks.filter((task) => task.status === filter) // Computation: filter tasks based on the provided filter value and return the filtered array
   );
 
+
 export default taskSlice.reducer;

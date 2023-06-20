@@ -19,7 +19,7 @@ const Dashboard = () => {
           <div className="list_header">
             <p className="serial_num">S/N</p>
             <p className="task_name">Task Name</p>
-            <p className="end_date">End Date</p>
+            <p className="end_date">Due Date</p>
             <p className="prority">Propriety</p>
           </div>
 

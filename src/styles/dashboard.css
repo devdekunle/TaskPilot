@@ -130,3 +130,63 @@
   margin-left: 2rem;
   box-shadow: 0 0 12px 2px rgba(0, 0, 0, 0.2);
 }
+
+/* Media Query */
+@media screen and (max-width: 765px) {
+  .dashboard-cards {
+    padding: 0 !important;
+    font-size: 0.75rem;
+  }
+
+  .dashboard-card {
+    height: 70px;
+    margin: 0.25rem;
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 0.5rem;
+  }
+
+  .dashboard-card .title {
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+
+  .dashboard div.numbers > span {
+    font-size: 1rem;
+    font-weight: 600;
+    display: block;
+    width: 100%;
+  }
+
+  .dashboard div.numbers > p.dashboard_icon {
+    display: none;
+  }
+
+  .dashboard-stats {
+    flex-direction: column;
+    padding: 0 0.75rem;
+  }
+
+  .deadline-tasks {
+    width: 100%;
+  }
+
+  .list_items {
+    height: 315px;
+  }
+
+  .deadline-tasks > h3 {
+    margin-top: 0.75rem;
+    margin-bottom: 0.25rem;
+    padding: 0;
+  }
+
+  .deadline-tasks > div.list_header {
+    margin-top: 0;
+  }
+
+  .other-analysis {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+}

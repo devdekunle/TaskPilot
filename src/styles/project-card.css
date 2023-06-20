@@ -30,38 +30,71 @@
 .project-card > div.form-action {
   display: flex;
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   position: absolute;
   bottom: 0.25rem;
   left: 0;
   justify-content: space-between;
 }
 
-div.form-action > p {
+div.form-action > div {
   box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.2);
   border-radius: 0.25rem;
   padding: 0.5rem;
-  width: 20%;
+  width: 17%;
   display: flex;
   justify-content: center;
   justify-content: center;
+  position: relative;
 }
 
-div.form-action > p:active {
+div.form-action > div:active {
   transform: translateY(2px);
   filter: brightness(1.1);
   transition: all 0.1s linear !important;
 }
 
-div.form-action > p > span {
+div.form-action > div.invite-member {
+  padding: 0;
+  display: flex;
+  transform: translateY(0);
+  align-items: center;
+}
+
+.invite-member-icon {
+  width: 100%;
+  height: 2rem;
+  padding: 0.5rem;
+}
+
+div.form-action > div > span {
   margin-left: 0.5rem;
 }
 
-div.form-action:hover > p {
+div.form-action:hover > div {
   background-color: rgba(0, 0, 0, 0.2);
   transition: all 0.5s ease-in-out;
 }
 
-div.form-action > p:hover {
+div.form-action > div:hover {
   background-color: white;
+}
+
+.mini-modal-project {
+  min-height: 100px;
+  min-width: 200px;
+  position: absolute;
+  bottom: 100%;
+  z-index: 3;
+  right: calc(100% - 1rem);
+  background-color: white;
+  box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (max-width: 765px) {
+  .project-card {
+    width: 100%;
+    margin: 0.75rem 0;
+    flex-basis: calc(100%);
+  }
 }

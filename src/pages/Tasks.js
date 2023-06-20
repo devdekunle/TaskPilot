@@ -12,7 +12,7 @@ const Tasks = () => {
   const { id: projectId } = useParams();
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
-  const { isLoading, isError } = useSelector((state) => state.tasks);
+  const { isLoading, isError, tasks } = useSelector((state) => state.tasks);
   const pendingTask = useSelector(selectFilteredTasks("pending"));
   const ongoingTask = useSelector(selectFilteredTasks("ongoing"));
   const completedTask = useSelector(selectFilteredTasks("completed"));
@@ -21,6 +21,7 @@ const Tasks = () => {
   useEffect(() => {
     if (projectId) {
       dispatch(fetchTasks({ projectId, token }));
+      console.log(tasks);
     }
     if (isError) {
       toast.error("An error occured while fetching your Tasks");

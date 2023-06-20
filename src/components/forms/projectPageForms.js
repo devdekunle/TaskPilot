@@ -1,6 +1,6 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { TextInput } from "./formElements";
+import { Radio, TextInput } from "./formElements";
 import { FaSpinner } from "react-icons/fa";
 import "../../styles/form/project-forms.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,8 +9,8 @@ import {
   deleteProject,
   updateProject,
 } from "../../store/slices/projectSlice";
-import { useEffect } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 // Create Project Form
 export const CreateProject = ({ setIsModalOpen }) => {
@@ -85,7 +85,9 @@ export const DeleteProject = ({ projectId, title, setIsModalOpen }) => {
   const handleDeleteProject = async () => {
     try {
       dispatch(deleteProject({ projectId, userId, token }));
-      setIsModalOpen(false);
+      if (!isError) {
+        setIsModalOpen(false);
+      }
     } catch (error) {
       toast.error(error.message);
     }
@@ -167,5 +169,82 @@ export const UpdateProject = ({
         </div>
       </Form>
     </Formik>
+  );
+};
+
+// Invite New Members
+export const InviteProjectMember = ({
+  handleModalClose,
+  userId,
+  projectId,
+  token,
+  title,
+}) => {
+  const handleProjectInvite = async (values, { setSubmitting, resetForm }) => {
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:5000/auth/invite/senders/${userId}/projects/${projectId}`,
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response);
+
+      toast.success("Mail Sent");
+      resetForm();
+      handleModalClose();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="invite-project-member">
+      <h5 className="heading">Invite Member to ({title}) Project</h5>
+      <Formik
+        initialValues={{
+          recipient_email: "",
+          member_role: "member",
+        }}
+        onSubmit={handleProjectInvite}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <TextInput name="recipient_email" placeholder="Email Address" />
+            <div className="member-role">
+              <h5>Choose member role</h5>
+              <Radio name="member_role" value="member">
+                member
+              </Radio>
+              <Radio name="member_role" value="admin">
+                admin
+              </Radio>
+            </div>
+            <h6 className="foot-note">
+              Note:{" "}
+              <small>
+                An <strong>admin</strong> can create, delete, edit and invite
+                members to tasks and subtasks
+              </small>
+            </h6>
+            <div className="mini-modal-btns">
+              <button className="btn" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? <FaSpinner className="spinner" /> : "Invite"}
+              </button>
+
+              <button className="btn" type="reset" onClick={handleModalClose}>
+                Cancel
+              </button>
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 };

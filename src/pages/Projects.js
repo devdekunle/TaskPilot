@@ -17,7 +17,8 @@ const Projects = () => {
     (state) => state.projects
   );
   // Auth State
-  const { token } = useSelector((state) => state.auth);
+  const { token, userData } = useSelector((state) => state.auth);
+  const { id: userId } = userData;
 
   // Handle Modal Logic
   const [isOpen, setIsModalOpen] = useState(false);
@@ -34,6 +35,8 @@ const Projects = () => {
   };
 
   useEffect(() => {
+    localStorage.removeItem("modalOpen");
+    localStorage.removeItem("taskId");
     if (token) {
       dispatch(fetchProjects(token));
     }
@@ -50,23 +53,6 @@ const Projects = () => {
         modalContent={modalContent}
       />
       <div className="projects">
-        <div className="filter">
-          <Formik
-            initialValues={{
-              filterProjects: "",
-            }}
-          >
-            <Form>
-              <Select label="Filter Projects: " name="filterProjects">
-                <option value="">All</option>
-                <option value="ownProjects">My Own Projects</option>
-              </Select>
-              {/* <button type="submit" className="btn">
-              Submit
-            </button> */}
-            </Form>
-          </Formik>
-        </div>
         <div className="btn add_project_btn" onClick={handleShowModal}>
           Create Project
         </div>
@@ -74,9 +60,14 @@ const Projects = () => {
           <CardSkeleton cards={6} />
         ) : (
           <div className="project-cards">
-            {projects ? (
+            {projects && projects.length > 0 ? (
               projects.map((item, index) => (
-                <ProjectCard {...item} key={index} />
+                <ProjectCard
+                  {...item}
+                  key={index}
+                  userId={userId}
+                  token={token}
+                />
               ))
             ) : (
               <div className="empty-project">

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import "../styles/tasks.css";
 import TaskCard from "../components/TaskCard";
 import { CardSkeleton } from "../components/ProjectCard";
@@ -22,23 +22,17 @@ const TasksInProgress = () => {
   return (
     <div className="tasks task_flex_container">
       <div className="task_cards">
-        {isLoading ? (
-          <CardSkeleton cards={6} />
+        {ongoingTask ? (
+          ongoingTask.map((card) => (
+            <TaskCard
+              btnText="Back to Pending"
+              btnTextNext="Move to Completed"
+              key={card.id}
+              {...card}
+            />
+          ))
         ) : (
-          <>
-            {ongoingTask ? (
-              ongoingTask.map((card) => (
-                <TaskCard
-                  btnText="Back to Pending"
-                  btnTextNext="Move to Completed"
-                  key={card.id}
-                  {...card}
-                />
-              ))
-            ) : (
-              <h2>No On-Going Tasks</h2>
-            )}
-          </>
+          <h2>No On-Going Tasks</h2>
         )}
       </div>
     </div>

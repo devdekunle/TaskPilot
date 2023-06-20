@@ -25,7 +25,7 @@
   flex-basis: calc(33.33% - 2rem);
   border-radius: 0.25rem;
   padding: 1rem 0.5rem;
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.1);
   position: relative;
   margin: 1rem;
@@ -37,6 +37,21 @@
 .task_card .details > div.show-subTask-modal {
   height: 100%;
   cursor: pointer;
+}
+
+.dates > h5 > span {
+  font-weight: 300;
+  margin-left: 0.5rem;
+}
+
+.is-completed-badge {
+  /* border: 2px solid red; */
+  font-weight: 700;
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  color: gold;
 }
 
 .task_card .priority {
@@ -95,16 +110,18 @@
   display: none;
 }
 
+.btn-ongoing > button{
+  background-color: var(--warning);
+}
 .btn-ongoing > button,
 .btn-completed > button {
   height: 100%;
   padding: 0.4rem 0.25rem;
   width: calc(50% - 0.5rem);
-  background-color: var(--danger-dark);
 }
 
-.second-btn {
-  background-color: var(--success-dark) !important;
+.btn-completed > button{
+  background-color: var(--warning);
 }
 
 .arrowRight-approved,
@@ -114,12 +131,15 @@
 }
 
 .btn-pending {
-  background-color: var(--warning);
+  background-color: var(--warning) !important;
 }
 
-.btn-inProgress,
 .btn-completed {
   background-color: transparent;
+}
+
+.second-btn {
+  background-color: var(--theme-blue) !important;
 }
 
 .btn-approved {
@@ -199,8 +219,8 @@
 }
 
 /* disabled div */
-.disabled{
+.disabled {
   pointer-events: none;
-    background-color: lightgray !important;
+  background-color: lightgray !important;
   color: white;
 }

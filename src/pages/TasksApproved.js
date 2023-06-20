@@ -22,18 +22,12 @@ const TasksApproved = () => {
   return (
     <div className="tasks task_flex_container">
       <div className="task_cards">
-        {isLoading ? (
-          <CardSkeleton cards={6} />
+        {approvedTask ? (
+          approvedTask.map((card) => (
+            <TaskCard btnText="Approved" key={card.id} {...card} />
+          ))
         ) : (
-          <>
-            {approvedTask ? (
-              approvedTask.map((card) => (
-                <TaskCard btnText="Approved" key={card.id} {...card} />
-              ))
-            ) : (
-              <h2>No Approved Tasks</h2>
-            )}
-          </>
+          <h2>No Approved Tasks</h2>
         )}
       </div>
     </div>

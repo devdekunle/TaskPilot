@@ -11,8 +11,20 @@
   margin-bottom: 1rem;
 }
 
+.task-description {
+  /* box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.1); */
+  padding: 0.25rem 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.task-description ul,
+.task-description ol {
+  padding-left: 2rem;
+  list-style-type: initial !important;
+}
+
 .task-description li {
-  list-style-type: circle !important;
+  list-style-type: initial !important;
 }
 
 .rich-text > span {
@@ -34,6 +46,11 @@
   margin-top: 0.25rem;
 }
 
+.rich-text > button[type="reset"] {
+  background-color: var(--danger-dark);
+  margin-left: 0.5rem;
+}
+
 .task-progress {
   margin: 0.5rem 0;
 }
@@ -48,6 +65,7 @@
   position: absolute;
   left: 0;
   height: 100%;
+  width: 0;
   background-color: var(--success);
   border-radius: 0.25rem;
   transition: all 0.5s ease;
@@ -69,7 +87,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 1px solid red;
 }
 
 .add-subtask-form input {
@@ -117,4 +134,3 @@
 .assign-members > .dates {
   margin-right: 1rem;
 }
-

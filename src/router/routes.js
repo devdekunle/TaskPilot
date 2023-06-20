@@ -23,6 +23,8 @@ import TokenVerification from "../pages/TokenVerification";
 // Protected Route
 import Projects from "../pages/Projects";
 import PulicRoutes from "../components/PulicRoutes";
+import VerifyProjectInvitationToken from "../pages/VerifyProjectInvitationToken";
+import Calendar from "../pages/Calendar";
 
 export const unProtectedRoutes = createBrowserRouter(
   createRoutesFromElements(
@@ -55,6 +57,11 @@ export const unProtectedRoutes = createBrowserRouter(
               <Route path="approved" element={<TasksApproved />} />
             </Route>
           </Route>
+          <Route
+            path="project-invitation"
+            element={<VerifyProjectInvitationToken />}
+          />
+          <Route path="calendar" element={<Calendar />} />
         </Route>
       </Route>
     </Route>

@@ -23,20 +23,6 @@
   font-weight: 700;
 }
 
-.projects > div.filter {
-  position: fixed;
-  top: 5rem;
-  z-index: 1;
-  background-color: var(--light);
-}
-
-.projects > div.filter select {
-  border: 1px solid grey;
-  outline: none;
-  width: 200px;
-  padding: 0.25rem;
-}
-
 .project-cards {
   width: 100%;
   display: flex;
@@ -50,4 +36,14 @@
   margin-top: 4rem;
   font-size: 3rem;
   text-align: center;
+}
+
+@media screen and (max-width: 765px) {
+  .add_project_btn {
+    right: 0.75rem;
+  }
+
+  .project-cards {
+    flex-wrap: wrap;
+  }
 }

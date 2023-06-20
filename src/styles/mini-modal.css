@@ -1,0 +1,29 @@
+.mini-modal-body {
+  width: 100%;
+  min-height: 100px;
+  position: relative;
+  height: 100%;
+  padding: 0.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.mini-modal-btns {
+  position: absolute;
+  bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 0.5rem;
+  left: 0;
+}
+
+.mini-modal-btns > button {
+  width: calc(50% - 0.5rem);
+  padding: 0.25rem;
+  color: var(--light);
+  background-color: var(--danger);
+}
+
+.mini-modal-btns > button[type="submit"] {
+  background-color: var(--theme-blue);
+}

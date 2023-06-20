@@ -49,3 +49,10 @@
 .side-nav a:hover {
   background-color: rgba(0, 0, 0, 0.17);
 }
+
+/* Media Query */
+@media screen and (max-width: 756px) {
+  .side-nav {
+    display: none;
+  }
+}

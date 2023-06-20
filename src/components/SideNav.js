@@ -35,25 +35,25 @@ const SideNav = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/users">
+            <NavLink to="calendar">
               <FontAwesomeIcon icon={faCalendar} className="navlink_icon" />
               Calendar
             </NavLink>
           </li>
           <li>
-            <NavLink to="/users">
+            <NavLink to="notifications">
               <FontAwesomeIcon icon={faBell} className="navlink_icon" />
               Notifications
             </NavLink>
           </li>
           <li>
-            <NavLink to="/users">
+            <NavLink to="members">
               <HiOutlineUsers className="navlink_icon" />
               Team
             </NavLink>
           </li>
           <li>
-            <NavLink to="/users">
+            <NavLink to="settings">
               <FontAwesomeIcon icon={faCog} className="navlink_icon" />
               Settings
             </NavLink>

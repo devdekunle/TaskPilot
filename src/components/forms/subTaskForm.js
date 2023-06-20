@@ -15,7 +15,7 @@ import {
   updateSubTask,
 } from "../../store/slices/subTaskSlice";
 
-export const CreateSubTask = ({ userId, token, taskId }) => {
+export const CreateSubTask = ({ userId, token, taskId, taskStatus }) => {
   const [TextInputIsOpen, setTextInputIsOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -26,6 +26,10 @@ export const CreateSubTask = ({ userId, token, taskId }) => {
 
   // Handle SubTask Creation
   const handleSubTaskCreation = (values, { setSubmitting, resetForm }) => {
+    console.log(taskStatus);
+    if (taskStatus === "pending") {
+      console.log("Hello World");
+    }
     // dispatch an action
     try {
       dispatch(createSubTask({ taskId, userId, token, values }));
@@ -92,7 +96,7 @@ export const RichTexteditor = ({ description, userId, token, taskId }) => {
   const [richTextDesc, setRichTextDesc] = useState("");
 
   const [editDesc, setEditDesc] = useState(false);
-  const { task } = useSelector((state) => state?.tasks);
+  const { task, isLoading } = useSelector((state) => state?.tasks);
   const dispatch = useDispatch();
 
   const toggleEditDesc = () => {
@@ -122,7 +126,7 @@ export const RichTexteditor = ({ description, userId, token, taskId }) => {
       const parsedDescription = parse(description);
       setRichTextDesc(parsedDescription);
     }
-  }, [taskId, token, dispatch, task, editDesc]);
+  }, [taskId, token, dispatch, task, editDesc, isLoading]);
   return (
     <>
       <div className="rich-text-editor">
@@ -143,6 +147,15 @@ export const RichTexteditor = ({ description, userId, token, taskId }) => {
               >
                 {editDesc ? "Save" : "Edit"}
               </button>
+              {editDesc && (
+                <button
+                  className="btn"
+                  type="reset"
+                  onClick={() => setEditDesc(false)}
+                >
+                  Cancel
+                </button>
+              )}
               <div className="task-description">{richTextDesc}</div>
             </div>
           </Form>
@@ -199,9 +212,13 @@ export const CheckSubTaskBox = ({
   };
 
   // Handle SubTask Title
-  const handleEditSubtasktitle = (value) => {
-    console.log(title);
-    console.log(value);
+  const handleEditSubtasktitle = async (values) => {
+    try {
+      dispatch(updateSubTask({ subTaskId, token, values }));
+      setEditSubtaskTitle(false);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   // add status update
@@ -230,10 +247,10 @@ export const CheckSubTaskBox = ({
   };
   return (
     <>
-      {editSubtaskTitle ? (
+      {editSubtaskTitle && (
         <Formik
           initialValues={{
-            title: token,
+            title: title,
           }}
           onSubmit={handleEditSubtasktitle}
         >
@@ -255,7 +272,9 @@ export const CheckSubTaskBox = ({
             </div>
           </Form>
         </Formik>
-      ) : (
+      )}
+
+      {!editSubtaskTitle && (
         <Formik
           initialValues={{
             subTaskValue: isChecked,
@@ -370,43 +389,56 @@ export const UpdateDate = ({
   isUpdateModalOpen,
   onUpdateModalClose,
 }) => {
-  const handleDateUpdate = (values) => {
-    console.log("Hello world...");
-    console.log(values);
-  };
+  const [newStartDate, setNewStartDate] = useState(startDate || "");
+  const [newEndDate, setNewEndDate] = useState(endDate || "");
+  const dispatch = useDispatch();
 
+  const handleDateUpdate = (e) => {
+    const updatedDates = {
+      start_date: newStartDate,
+      end_date: newEndDate,
+    };
+
+    try {
+      dispatch(updateSubTask({ subTaskId, token, values: updatedDates }));
+      onUpdateModalClose();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
     <>
       {isUpdateModalOpen && (
         <div className="due-date-modal">
-          <Formik
-            initialValues={{
-              endDate: "",
-              startDate: "",
-            }}
-            onSubmit={handleDateUpdate}
-          >
-            <Form>
-              <div>
-                <TextInput name="startDate" type="date" label={"Start Date"} />
-              </div>
-              <div>
-                <TextInput name="endDate" type="date" label={"End Date"} />
-              </div>
-              <div className="set-date-btn btn">
-                <button className="btn" type="submit">
-                  Update
-                </button>
-                <button
-                  className="btn"
-                  type="reset"
-                  onClick={onUpdateModalClose}
-                >
-                  Cancel
-                </button>
-              </div>
-            </Form>
-          </Formik>
+          <div className="form-control">
+            <label htmlFor="">Start Date: </label>
+            <input
+              type="date"
+              value={newStartDate}
+              onChange={(e) => setNewStartDate(e.target.value)}
+            />
+          </div>
+          <div className="form-control">
+            <label htmlFor="">End Date: </label>
+            <input
+              type="date"
+              value={newEndDate}
+              onChange={(e) => setNewEndDate(e.target.value)}
+            />
+          </div>
+          <div className="set-date-btns">
+            <button className="btn" type="button" onClick={handleDateUpdate}>
+              Save
+            </button>
+            <button
+              title="cancel"
+              className="btn"
+              type="reset"
+              onClick={onUpdateModalClose}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
     </>
