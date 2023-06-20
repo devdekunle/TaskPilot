@@ -116,8 +116,8 @@ def delete_project(current_user, project_id, user_id):
                 for iv in storage.all(Invitation).values():
                     if iv.project_id == project_id:
                         storage.delete(iv)
-                project.members.remove(p_u)
-                storage.delete(p_u)
+                project.members.remove(pr_u)
+                storage.delete(pr_u)
         storage.delete(project)
         storage.save()
         return make_response(jsonify({'status': 'Project deleted'})), 204

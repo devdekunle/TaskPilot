@@ -44,13 +44,12 @@ def invite_member(current_user, sender_id, project_id):
     existing_user = storage.get_user(invite_data.get('recipient_email', None))
     if existing_user:
 
-        all_p_u = current_user.projects
 
         # check if inviter and project exists
         user = storage.get(User, sender_id)
         project = storage.get(Project, project_id)
         if user and project:
-            for p_u in all_p_u:
+            for p_u in project.members:
                 # check if user is already a member of the project
                 if p_u.user_id == existing_user.id and p_u.project_id == project_id:
                     response = {
@@ -59,7 +58,7 @@ def invite_member(current_user, sender_id, project_id):
                         }
                     return make_response(jsonify(response)), 400
             else:
-                all_p_u = current_user.projects
+                all_p_u = project.members
                 for p_u in all_p_u:
                     # check if invitation is carried out by current user
                     if p_u.user_id == user.id and p_u.project_id == project.id:
@@ -92,7 +91,6 @@ def invite_member(current_user, sender_id, project_id):
                     #create invitation instance
                     new_invite = Invitation(**invite_data)
                     new_invite.save()
-
                     # create invite link
                     link = url_for('auth.accept_invite', token=auth_token.decode('utf-8'),
                             _external=True)
@@ -138,8 +136,8 @@ def accept_invite(current_user, token):
         try:
             payload = User.decode_token(token)
             if type(payload) is not str:
-                invitee = storage.get_invite(payload['email_address'])
-
+                invitee = storage.get_invite(token)
+                print(invitee)
                 #blacklist token
                 blacklist_token = BlackToken(token=token)
                 blacklist_token.save()
@@ -151,11 +149,9 @@ def accept_invite(current_user, token):
                     }
                     project = storage.get(Project, invitee.project_id)
                     p_u = ProjectUser(**p_u_data)
-
                     if p_u not in current_user.projects:
                         current_user.projects.append(p_u)
                         project.members.append(p_u)
-
                     storage.save()
                     response = {
                         'Status': 'Success',

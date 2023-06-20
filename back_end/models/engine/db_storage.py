@@ -91,10 +91,10 @@ class DataStorage:
 
         return None
 
-    def get_invite(self, recipient_email=None):
-        if recipient_email is None:
+    def get_invite(self, token=None):
+        if token is None:
             return None
-        return self.__session.query(Invitation).filter_by(recipient_email=recipient_email).first()
+        return self.__session.query(Invitation).filter_by(token=token).first()
 
     def get_user(self, email=None):
         if email is None:
