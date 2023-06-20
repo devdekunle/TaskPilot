@@ -31,9 +31,9 @@ def get_project_members(current_user, project_id):
         # check all project_user association for members of project
         for p_u in all_p_u:
             user_dict = {'user_details': p_u.user.to_dict(),
-                        'member_role': p_u.member_role}
+                        'member_role': p_u.member_role,
+                        'project_id': project_id}
             project_members.append(user_dict)
-        project_members.append(project_id)
         return make_response(jsonify(project_members)), 200
     else:
         response = {
