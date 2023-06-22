@@ -9,14 +9,16 @@ import { FaUserPlus } from "react-icons/fa";
 import "../styles/project-card.css";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useDispatch, useSelector } from "react-redux";
 import Modal from "./Modal";
 import {
   DeleteProject,
   InviteProjectMember,
   UpdateProject,
 } from "./forms/projectPageForms";
+import { useDispatch, useSelector } from "react-redux";
+import { selectProjectMembers } from "../store/slices/userSlice";
 import { fetchProjectMembers } from "../store/slices/userSlice";
+import ProjectMembers from "./ProjectMembers";
 
 export const CardSkeleton = ({ cards }) => {
   return Array(cards)
@@ -48,17 +50,37 @@ const ProjectCard = ({
   token,
 }) => {
   const navigate = useNavigate();
-  const [admin, setAdmin] = useState(false);
-
   const dispatch = useDispatch();
+
+  // const members = useSelector(selectProjectMembers);
+
+  // const isAdmin = members?.projectMembers.forEach((member) => {
+  //   if (member.member_role === "admin" && member.user_details.id === userId) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // });
+
+  // console.log(isAdmin);
+
+  // const testId = members.forEach((element) => {
+  //   const id = element;
+  // });
+
   const members = useSelector((state) => state?.members);
+  const { projectMembers } = members;
+
+  const isAdmin = projectMembers.find(
+    (member) =>
+      member?.user_details?.id === userId &&
+      member?.member_role === "admin" &&
+      member?.project_id === projectId
+  );
+
   useEffect(() => {
     dispatch(fetchProjectMembers({ projectId, token }));
   }, [dispatch, token, projectId]);
-
-  // if user is an admin
-
-  const { projectMembers } = members;
 
   // Format Date
   const createdAt = formatDate(create_time, "EEE, dd MMM yyyy");
@@ -107,8 +129,12 @@ const ProjectCard = ({
           userId={userId}
           projectId={projectId}
           token={token}
-          title={title}
+          title={`${title} Members`}
         />
+      );
+    } else if (action === "project-members") {
+      setModalcontent(
+        <ProjectMembers token={token} projectId={projectId} title={title} />
       );
     }
   };
@@ -146,7 +172,7 @@ const ProjectCard = ({
           </h5>
         </div>
         <div className="form-action">
-          <div>
+          <div onClick={() => handleShowModal("project-members")}>
             <FontAwesomeIcon icon={faUsers} className="card_icon" />
             <span>{team}</span>
           </div>
@@ -155,20 +181,23 @@ const ProjectCard = ({
             <span>{message}</span>
           </div>
 
-          {
-            <div onClick={() => handleShowModal("delete")}>
-              <BsTrash className="card_icon" />
-            </div>
-          }
-          <div onClick={() => handleShowModal("update")}>
-            <BsPen className="card_icon" />
-          </div>
-          <div className="invite-member">
-            <FaUserPlus
-              className="card_icon invite-member-icon"
-              onClick={() => handleShowModal("invite-member")}
-            />
-          </div>
+          {isAdmin && (
+            <>
+              <div onClick={() => handleShowModal("delete")}>
+                <BsTrash className="card_icon" />
+              </div>
+
+              <div onClick={() => handleShowModal("update")}>
+                <BsPen className="card_icon" />
+              </div>
+              <div className="invite-member">
+                <FaUserPlus
+                  className="card_icon invite-member-icon"
+                  onClick={() => handleShowModal("invite-member")}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>

@@ -1,5 +1,5 @@
 .tasks-layout {
-    color: var(--text-dark);
+  color: var(--text-dark);
   margin-top: 70px;
   width: 100%;
   font-size: 0.85rem;
@@ -8,7 +8,7 @@
 
 .tasks-layout > div.header-container {
   box-shadow: 0 0px 12px 2px rgba(0, 0, 0, 0.2);
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   position: fixed;
   width: 100%;
   z-index: 2;
@@ -52,4 +52,33 @@
 .add_task_btn > span {
   font-size: 1rem;
   font-weight: 600;
+}
+
+@media screen and (max-width: 765px) {
+  .tasks-layout-links {
+    padding: 0 0.5rem;
+    display: flex;
+    /* border: 2px solid red; */
+  }
+
+  .tasks-layout-links > a {
+    margin-right: 0.5rem;
+    padding: 0.5rem 0.25rem;
+  }
+
+  .tasks-layout-links > a.active {
+    background-color: var(--light);
+  }
+
+  .add_task_btn {
+    position: absolute;
+    right: 0.75rem;
+    top: 1rem;
+  }
+}
+
+@media screen and (max-width: 385px) {
+  .tasks-layout-links > a {
+    font-size: 0.75rem;
+  }
 }

@@ -28,7 +28,12 @@ const TasksPending = () => {
           <> */}
         {pendingTask ? (
           pendingTask.map((card) => (
-            <TaskCard btnText="Move to On Going" key={card.id} {...card} />
+            <TaskCard
+              btnText="Move to On Going"
+              key={card.id}
+              {...card}
+              projectId={projectId}
+            />
           ))
         ) : (
           <h2>No Pending Tasks</h2>

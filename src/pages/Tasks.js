@@ -7,26 +7,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchTasks, selectFilteredTasks } from "../store/slices/taskSlice";
 import { useParams } from "react-router-dom";
 import { CardSkeleton } from "../components/ProjectCard";
+import { fetchProjectMembers } from "../store/slices/userSlice";
 
 const Tasks = () => {
   const { id: projectId } = useParams();
+
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth);
+  const { token, userData } = useSelector((state) => state.auth);
+
   const { isLoading, isError, tasks } = useSelector((state) => state.tasks);
+  const { id: userId } = userData;
+
   const pendingTask = useSelector(selectFilteredTasks("pending"));
   const ongoingTask = useSelector(selectFilteredTasks("ongoing"));
   const completedTask = useSelector(selectFilteredTasks("completed"));
   const approvedTask = useSelector(selectFilteredTasks("approved"));
 
+  const members = useSelector((state) => state?.members);
+
+  useEffect(() => {
+    dispatch(fetchProjectMembers({ projectId, token }));
+  }, [dispatch]);
+
   useEffect(() => {
     if (projectId) {
       dispatch(fetchTasks({ projectId, token }));
-      console.log(tasks);
     }
     if (isError) {
       toast.error("An error occured while fetching your Tasks");
     }
-  }, [dispatch, token, projectId]);
+  }, [dispatch]);
 
   return (
     <>
@@ -34,9 +44,11 @@ const Tasks = () => {
         <div>
           <Accordion title={"Pending"} total={pendingTask.length || 0}>
             <div className="task_cards">
-              {isLoading ? (
-                <CardSkeleton cards={6} />
-              ) : (
+              {
+                // isLoading ? (
+                //   <CardSkeleton cards={6} />
+                // ) :
+
                 <>
                   {pendingTask ? (
                     pendingTask.map((card) => (
@@ -44,13 +56,14 @@ const Tasks = () => {
                         btnText="Move to In Progress"
                         key={card.id}
                         {...card}
+                        projectId={projectId}
                       />
                     ))
                   ) : (
                     <h2>No Pending Tasks</h2>
                   )}
                 </>
-              )}
+              }
             </div>
           </Accordion>
         </div>
@@ -68,6 +81,7 @@ const Tasks = () => {
                         btnTextNext="Move to Completed"
                         key={card.id}
                         {...card}
+                        projectId={projectId}
                       />
                     ))
                   ) : (
@@ -92,6 +106,7 @@ const Tasks = () => {
                         btnTextNext="Approve Task"
                         key={card.id}
                         {...card}
+                        projectId={projectId}
                       />
                     ))
                   ) : (
@@ -116,6 +131,7 @@ const Tasks = () => {
                         btnTextNext="Move to Completed"
                         key={card.id}
                         {...card}
+                        projectId={projectId}
                       />
                     ))
                   ) : (

@@ -106,7 +106,6 @@ export const fetchTasksApi = async (projectId, token) => {
         },
       }
     );
-    console.log(response.data);
     return response;
   } catch (error) {
     throw error;

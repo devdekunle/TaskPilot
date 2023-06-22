@@ -133,12 +133,6 @@ export const Signup = ({ onClick }) => {
       // dispatch a modal action
       dispatch(openModal());
     } catch (error) {
-      if (
-        error.response &&
-        error.response.status >= 400 &&
-        error.response.status < 500
-      )
-        toast.error(error.message);
     } finally {
       setSubmitting(false);
     }

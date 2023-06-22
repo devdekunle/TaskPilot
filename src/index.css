@@ -68,7 +68,7 @@ input {
   padding: 0.5rem 0.25rem !important;
 }
 
-input:focus{
+input:focus {
   border: 2px solid var(--theme-blue) !important;
 }
 
@@ -112,4 +112,9 @@ input:focus{
   height: 300px;
   width: 100%;
   background-color: red;
+}
+
+div.form-error {
+  position: relative;
+  top: -0.75rem;
 }

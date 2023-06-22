@@ -110,7 +110,7 @@
   display: none;
 }
 
-.btn-ongoing > button{
+.btn-ongoing > button {
   background-color: var(--warning);
 }
 .btn-ongoing > button,
@@ -120,7 +120,7 @@
   width: calc(50% - 0.5rem);
 }
 
-.btn-completed > button{
+.btn-completed > button {
   background-color: var(--warning);
 }
 
@@ -223,4 +223,10 @@
   pointer-events: none;
   background-color: lightgray !important;
   color: white;
+}
+
+@media screen and (max-width: 765px) {
+  .task_card {
+    flex-basis: 100%;
+  }
 }

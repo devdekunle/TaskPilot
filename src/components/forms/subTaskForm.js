@@ -26,10 +26,6 @@ export const CreateSubTask = ({ userId, token, taskId, taskStatus }) => {
 
   // Handle SubTask Creation
   const handleSubTaskCreation = (values, { setSubmitting, resetForm }) => {
-    console.log(taskStatus);
-    if (taskStatus === "pending") {
-      console.log("Hello World");
-    }
     // dispatch an action
     try {
       dispatch(createSubTask({ taskId, userId, token, values }));

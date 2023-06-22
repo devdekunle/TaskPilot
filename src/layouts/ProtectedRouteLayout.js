@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import { TextInput } from "../components/forms/formElements";
 import SideNav from "../components/SideNav";
@@ -6,8 +6,10 @@ import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "../styles/protected-page.css";
 import { BsSearch, BsBell } from "react-icons/bs";
+import { FaBars } from "react-icons/fa";
 
 const ProtectedRouteLayout = () => {
+  const [mobileSideBar, setMobileSideBar] = useState(false);
   const { userData } = useSelector((state) => state?.auth);
   const { first_name: firstName, last_name: lastName } = userData;
 
@@ -16,6 +18,9 @@ const ProtectedRouteLayout = () => {
   return (
     <div className="protected-route-container">
       <div className="header">
+        <div className="menu-bar" onClick={() => setMobileSideBar(true)}>
+          <FaBars />
+        </div>
         <div className="search_bar">
           <BsSearch />
           <Formik
@@ -51,7 +56,10 @@ const ProtectedRouteLayout = () => {
           <p className="user_name">{`${firstName} ${lastName}`}</p>
         </div>
       </div>
-      <SideNav />
+      <SideNav
+        mobileSideBar={mobileSideBar}
+        setMobileSideBar={setMobileSideBar}
+      />
       <Outlet />
     </div>
   );

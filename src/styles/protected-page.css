@@ -7,6 +7,10 @@
   position: relative;
 }
 
+.menu-bar {
+  display: none;
+}
+
 .protected-route-container > div.header {
   /* position: absolute; */
   position: fixed;
@@ -96,5 +100,14 @@
 
   .user_name {
     display: none;
+  }
+
+  .menu-bar {
+    display: block;
+    padding-right: 0.5rem;
+  }
+
+  .search_bar input {
+    width: 120px;
   }
 }

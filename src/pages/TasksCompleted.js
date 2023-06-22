@@ -29,6 +29,7 @@ const TasksCompleted = () => {
               btnTextNext="Approve Task"
               key={card.id}
               {...card}
+              projectId={projectId}
             />
           ))
         ) : (

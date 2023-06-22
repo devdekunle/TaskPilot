@@ -24,7 +24,12 @@ const TasksApproved = () => {
       <div className="task_cards">
         {approvedTask ? (
           approvedTask.map((card) => (
-            <TaskCard btnText="Approved" key={card.id} {...card} />
+            <TaskCard
+              btnText="Approved"
+              key={card.id}
+              {...card}
+              projectId={projectId}
+            />
           ))
         ) : (
           <h2>No Approved Tasks</h2>

@@ -34,7 +34,7 @@
   position: absolute;
   bottom: 0.25rem;
   left: 0;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 div.form-action > div {
@@ -46,6 +46,7 @@ div.form-action > div {
   justify-content: center;
   justify-content: center;
   position: relative;
+  margin-right: 0.75rem;
 }
 
 div.form-action > div:active {
@@ -89,6 +90,59 @@ div.form-action > div:hover {
   right: calc(100% - 1rem);
   background-color: white;
   box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.1);
+}
+
+.project-members {
+  height: 100%;
+  padding: 2rem 0.25rem;
+  padding-bottom: 0.5rem;
+  position: relative;
+  color: var(--text-dark);
+  font-weight: 600;
+  z-index: -1;
+}
+
+.project-members h3 {
+  position: absolute;
+  top: 0.25rem;
+  left: 0.25rem;
+}
+
+.project-members li {
+  border: 1px solid #aaa;
+  margin: 0.25rem 0;
+  display: flex;
+  padding: 0.25rem;
+}
+
+.project-members li > span:first-child {
+  width: 1rem;
+}
+
+.project-members li > span:nth-child(2) {
+  flex: 1;
+  margin-left: 0.5rem;
+}
+
+.project-members li label {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.project-members li label input {
+  position: relative;
+  top: 3px;
+  margin-right: 0.25rem;
+}
+.project-members li .admin-user {
+  background-color: rgba(0, 128, 0, 0.5);
+  padding: 0 0.25rem;
+  color: white;
+}
+
+.project-members li:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 @media screen and (max-width: 765px) {

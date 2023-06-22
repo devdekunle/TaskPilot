@@ -9,6 +9,29 @@ const initialState = {
   userData: null,
 };
 
+export const logoutUser = () => {
+      localStorage.removeItem("user_details");
+      localStorage.removeItem("auth_token");
+  return {
+    type: "auth/logoutUser",
+  };
+};
+
+// export const logoutUser = () => async (dispatch) => {
+//   try {
+//     localStorage.removeItem("user_details");
+//     localStorage.removeItem("auth_token");
+
+//     const res = dispatch({ type: "auth/logoutUser" });
+//     console.log(res);
+//   } catch (error) {
+//     // Handle any error that occurs during the logout process
+//     console.log(error);
+//   }
+// };
+
+// Update the extraReducers section in your authSlice
+
 // Generate pending, fulfilled and rejected action types
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
@@ -49,6 +72,11 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.loading = false;
         state.error = action.error.message;
+        state.userData = null;
+      })
+      .addCase(logoutUser, (state) => {
+        state.isAuthenticated = false;
+        state.token = null;
         state.userData = null;
       });
   },

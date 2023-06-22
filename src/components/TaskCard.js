@@ -19,6 +19,8 @@ import {
   FaComments,
   FaBell,
 } from "react-icons/fa";
+import ProjectMembers from "./ProjectMembers";
+import { addMemberToTask } from "../store/slices/userSlice";
 
 const TaskCard = ({
   title,
@@ -33,12 +35,15 @@ const TaskCard = ({
   status,
   id: taskId,
   completed,
+  projectId,
 }) => {
   const dispatch = useDispatch();
   const { isLoading, isError } = useSelector((state) => state?.tasks);
   const { userData, token } = useSelector((state) => state?.auth);
   const { id: userId } = userData;
   const [modalContent, setModalContent] = useState(null);
+  const [teamLeadChecked, setTeamLeadChecked] = useState(false);
+  const teamLead = true;
 
   // handle Task Progress
   const taskCompleteHandler = (completedSubTask) => {
@@ -96,6 +101,29 @@ const TaskCard = ({
     setIsModalOpen(false);
     localStorage.removeItem("modalOpen");
     localStorage.removeItem("taskId");
+  };
+
+  // handle Onchange
+  const handleCheckboxChange = (newValue) => {
+    setTeamLeadChecked(newValue);
+    console.log(teamLeadChecked);
+  };
+
+  const assignMemberToTask = ({ id, email_address }) => {
+    try {
+      const res = dispatch(
+        addMemberToTask({
+          userId: id,
+          taskId,
+          token,
+          values: { email_address, member_role: "team_lead" },
+        })
+      );
+      console.log(res);
+      handleModalClose();
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   // Handle Card Progress (Pending -> <- ongoing -> <- completed -> approved)
@@ -196,6 +224,20 @@ const TaskCard = ({
           taskCompleteHandler={taskCompleteHandler}
         />
       );
+    } else if (action === "assign-members") {
+      setModalContent(
+        <>
+          <ProjectMembers
+            title={"Add to Task"}
+            onClick={assignMemberToTask}
+            projectId={projectId}
+            token={token}
+            teamLead={teamLead}
+            isChecked={teamLeadChecked}
+            onChange={handleCheckboxChange}
+          />
+        </>
+      );
     }
   };
 
@@ -245,32 +287,26 @@ const TaskCard = ({
                 <span>{teamcount}</span>
               </div>
 
-              <div title="Notifications">
-                <FaBell />
-                <span>{teamcount}</span>
-              </div>
-
               <div
                 title="Delete Card"
                 onClick={() => handleShowModal("delete")}
               >
                 <FaTrash />
               </div>
-            </div>
-          </div>
-          <div className="action_btns">
-            <div
-              className="btn"
-              onClick={() => handleShowModal("update")}
-              title="Edit Task"
-            >
-              <FaPen />
-            </div>
-            <div title="Set deadline">
-              <FaClock />
-            </div>
-            <div title="Invite Member">
-              <FaUserPlus />
+              <div
+                className="btn"
+                onClick={() => handleShowModal("update")}
+                title="Edit Task"
+              >
+                <FaPen />
+              </div>
+              <div
+                title="Assign Task"
+                className="btn"
+                onClick={() => handleShowModal("assign-members")}
+              >
+                <FaUserPlus />
+              </div>
             </div>
           </div>
         </div>

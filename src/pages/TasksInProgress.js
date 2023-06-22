@@ -29,6 +29,7 @@ const TasksInProgress = () => {
               btnTextNext="Move to Completed"
               key={card.id}
               {...card}
+              projectId={projectId}
             />
           ))
         ) : (

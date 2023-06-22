@@ -11,6 +11,7 @@ import {
 } from "../../store/slices/projectSlice";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { isAfter, parseISO } from "date-fns";
 
 // Create Project Form
 export const CreateProject = ({ setIsModalOpen }) => {
@@ -21,6 +22,7 @@ export const CreateProject = ({ setIsModalOpen }) => {
 
   // handle create peoject
   const handleCreateProject = async (values, { setSubmitting, resetForm }) => {
+    console.log(values);
     try {
       dispatch(createProject({ userId, values, token }));
       setIsModalOpen(false);
@@ -44,8 +46,39 @@ export const CreateProject = ({ setIsModalOpen }) => {
         // form validation
         validationSchema={Yup.object({
           title: Yup.string().required("Required"),
-          end_date: Yup.string().required("Required"),
-          start_date: Yup.string().required("Required"),
+          start_date: Yup.string()
+            .test(
+              "is-later-or-equal",
+              "Date must be later or equal to the current date",
+              function (value) {
+                const currentDate = new Date();
+                const selectedDate = parseISO(value);
+                return (
+                  isAfter(selectedDate, currentDate) ||
+                  this.createError({
+                    message: "Date must be later or equal to the current date",
+                  })
+                );
+              }
+            )
+            .required("Required"),
+          end_date: Yup.string()
+            .test(
+              "is-later-than-start",
+              "End date must be later than the start date",
+              function (value) {
+                const { start_date } = this.parent;
+                const startDate = parseISO(start_date);
+                const endDate = parseISO(value);
+                return (
+                  isAfter(endDate, startDate) ||
+                  this.createError({
+                    message: "End date must be later than the start date",
+                  })
+                );
+              }
+            )
+            .required("Required"),
         })}
         // handle form submit
         onSubmit={handleCreateProject}
@@ -126,6 +159,8 @@ export const UpdateProject = ({
   const { userData, token } = useSelector((state) => state?.auth);
   const { id: userId } = userData;
 
+  console.log(end_date);
+
   // handle update peoject
   const handleUpdateProject = async (values) => {
     try {
@@ -147,8 +182,38 @@ export const UpdateProject = ({
       // form validation
       validationSchema={Yup.object({
         title: Yup.string().required("Required"),
-        end_date: Yup.string().required("Required"),
-        start_date: Yup.string().required("Required"),
+        start_date: Yup.string()
+          .test(
+            "is-later-or-equal",
+            "Date must be later or equal to the current date",
+            function (value) {
+              const currentDate = new Date();
+              const selectedDate = parseISO(value);
+              return (
+                isAfter(selectedDate, currentDate) ||
+                this.createError({
+                  message: "Date must be later or equal to the current date",
+                })
+              );
+            }
+          )
+          .required("Required"),
+        end_date: Yup.string()
+          .test(
+            "is-later-or-equal",
+            "Date must be later or equal to the current date",
+            function (value) {
+              const currentDate = new Date();
+              const selectedDate = parseISO(value);
+              return (
+                isAfter(selectedDate, currentDate) ||
+                this.createError({
+                  message: "Date must be later or equal to the current date",
+                })
+              );
+            }
+          )
+          .required("Required"),
       })}
       onSubmit={handleUpdateProject}
     >

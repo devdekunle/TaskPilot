@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
+import { isAfter, parseISO } from "date-fns";
 
 // Create Task Form
 export const CreateTask = ({ setIsModalOpen }) => {
@@ -47,8 +48,39 @@ export const CreateTask = ({ setIsModalOpen }) => {
         // form validation
         validationSchema={Yup.object({
           title: Yup.string().required("Required"),
-          end_date: Yup.string().required("Required"),
-          start_date: Yup.string().required("Required"),
+          start_date: Yup.string()
+            .test(
+              "is-later-or-equal",
+              "Date must be later or equal to the current date",
+              function (value) {
+                const currentDate = new Date();
+                const selectedDate = parseISO(value);
+                return (
+                  isAfter(selectedDate, currentDate) ||
+                  this.createError({
+                    message: "Date must be later or equal to the current date",
+                  })
+                );
+              }
+            )
+            .required("Required"),
+          end_date: Yup.string()
+            .test(
+              "is-later-than-start",
+              "End date must be later than the start date",
+              function (value) {
+                const { start_date } = this.parent;
+                const startDate = parseISO(start_date);
+                const endDate = parseISO(value);
+                return (
+                  isAfter(endDate, startDate) ||
+                  this.createError({
+                    message: "End date must be later than the start date",
+                  })
+                );
+              }
+            )
+            .required("Required"),
         })}
         // handle form submit
         onSubmit={handleCreateTask}
@@ -157,8 +189,39 @@ export const UpdateTask = ({
       // form validation
       validationSchema={Yup.object({
         title: Yup.string().required("Required"),
-        end_date: Yup.string().required("Required"),
-        start_date: Yup.string().required("Required"),
+        start_date: Yup.string()
+          .test(
+            "is-later-or-equal",
+            "Date must be later or equal to the current date",
+            function (value) {
+              const currentDate = new Date();
+              const selectedDate = parseISO(value);
+              return (
+                isAfter(selectedDate, currentDate) ||
+                this.createError({
+                  message: "Date must be later or equal to the current date",
+                })
+              );
+            }
+          )
+          .required("Required"),
+        end_date: Yup.string()
+          .test(
+            "is-later-than-start",
+            "End date must be later than the start date",
+            function (value) {
+              const { start_date } = this.parent;
+              const startDate = parseISO(start_date);
+              const endDate = parseISO(value);
+              return (
+                isAfter(endDate, startDate) ||
+                this.createError({
+                  message: "End date must be later than the start date",
+                })
+              );
+            }
+          )
+          .required("Required"),
       })}
       // Handkle Submit
       onSubmit={handleUpdateTask}
