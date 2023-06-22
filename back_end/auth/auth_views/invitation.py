@@ -92,8 +92,7 @@ def invite_member(current_user, sender_id, project_id):
                     new_invite = Invitation(**invite_data)
                     new_invite.save()
                     # create invite link
-                    link = url_for('auth.accept_invite', token=auth_token.decode('utf-8'),
-                            _external=True)
+                    link = 'https://www.taskpilot.me/project-invitation?token={}'.format(auth_token.decode())
                     sub = "{} {} invites you to a TaskPilot project"
 
                     #send invite_link
