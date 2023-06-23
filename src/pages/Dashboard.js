@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DashboardCard from "../components/DashboardCard";
 import ExpirationDateList from "../components/ExpirationDateList";
 import { dashboardCardData, deadlineTask } from "../data/data";
+import { useSelector } from "react-redux";
+import { selectAllTasks } from "../store/slices/allTasks";
 import "../styles/dashboard.css";
 
 const Dashboard = () => {
+  const allTasks = useSelector(selectAllTasks);
+
+  useEffect(() => {
+    console.log(allTasks);
+  }, []);
+
   return (
     <div className="dashboard">
       <div className="dashboard-cards">
