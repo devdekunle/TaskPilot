@@ -44,21 +44,21 @@ class Register(MethodView):
 
                         )
                     # create email verification link
-                    link = 'https://www.taskpilot.me/auth/token-verification?token={}'.format(auth_token.decode())
+                    link = url_for('auth.verify_email_view', token=auth_token.decode(), _external=True)
+                    #link = 'https://www.taskpilot.me/auth/token-verification?token={}'.format(auth_token.decode())
 
                     mail_response = send_mail(subject='Confirm Email Address',
                         sender='taskpilot0@gmail.com',
                         recipients=[user_data['email_address']],
                         text_body='Please click the link to verify your email {}',
-                        link=link,
-                        token=auth_token.decode('utf-8')
+                        link=link
                         )
 
                     return make_response(jsonify(mail_response)), 200
 
                 except Exception as error:
-                    response = {'status': 'fail', 'message': 'Error occurred'}
-                    return make_response(jsonify(response)), 400
+                    #response = {'status': 'fail', 'message': 'Error occurred'}
+                    return jsonify(str(error))
             else:
                 response = {
                     'status': 'fail',
