@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 TASKPILOT:
 TaskPilot is a project management web application which that that helps project
 managers to efficiently manage thier project and collaborate with other users
@@ -76,3 +77,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 >>>>>>> 42b989c (Initialize project using Create React App)
+=======
+## ALX FOUNDATION PORTFOLIO PROJECT
+
+Project Name: Task Pilot
+>>>>>>> 02cf594b7f1744c5ffe914047396eaa6d4dff4a1
