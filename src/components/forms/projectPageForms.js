@@ -12,6 +12,7 @@ import {
 import { toast } from "react-toastify";
 import axios from "axios";
 import { isAfter, parseISO } from "date-fns";
+import { BASE_URL } from "../../api/api";
 
 // Create Project Form
 export const CreateProject = ({ setIsModalOpen }) => {
@@ -248,7 +249,7 @@ export const InviteProjectMember = ({
   const handleProjectInvite = async (values, { setSubmitting, resetForm }) => {
     try {
       const response = await axios.post(
-        `http://127.0.0.1:5000/auth/invite/senders/${userId}/projects/${projectId}`,
+        `${BASE_URL}/auth/invite/senders/${userId}/projects/${projectId}`,
         values,
         {
           headers: {

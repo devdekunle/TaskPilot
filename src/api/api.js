@@ -1,9 +1,11 @@
 import axios from "axios";
 
+export const BASE_URL = "https://taskpilot.me";
+
 // Handle User login
 export const loginUserApi = async (cred) => {
   try {
-    const response = await axios.post("http://127.0.0.1:5000/auth/login", cred);
+    const response = await axios.post(`${BASE_URL}/auth/login`, cred);
     return response;
   } catch (error) {
     throw error;
@@ -13,7 +15,7 @@ export const loginUserApi = async (cred) => {
 // Fetch all user's project
 export const fetchProjectsApi = async (token) => {
   try {
-    const response = await axios.get("http://127.0.0.1:5000/api/v1/projects", {
+    const response = await axios.get(`${BASE_URL}/api/v1/projects`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -28,7 +30,7 @@ export const fetchProjectsApi = async (token) => {
 export const fetchProjectApi = async (projectId, token) => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:5000/api/v1/projects/${projectId}`,
+      `${BASE_URL}/api/v1/projects/${projectId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -45,7 +47,7 @@ export const fetchProjectApi = async (projectId, token) => {
 export const createProjectApi = async (userId, values, token) => {
   try {
     const response = await axios.post(
-      `http://127.0.0.1:5000/api/v1/projects/users/${userId}`,
+      `${BASE_URL}/api/v1/projects/users/${userId}`,
       values,
       {
         headers: {
@@ -63,7 +65,7 @@ export const createProjectApi = async (userId, values, token) => {
 export const deleteProjectApi = async (projectId, userId, token) => {
   try {
     const response = await axios.delete(
-      `http://127.0.0.1:5000/api/v1/projects/${projectId}/users/${userId}`,
+      `${BASE_URL}/api/v1/projects/${projectId}/users/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -80,7 +82,7 @@ export const deleteProjectApi = async (projectId, userId, token) => {
 export const updateProjectApi = async (projectId, userId, token, values) => {
   try {
     const response = await axios.put(
-      `http://127.0.0.1:5000/api/v1/projects/${projectId}/users/${userId}`,
+      `${BASE_URL}/api/v1/projects/${projectId}/users/${userId}`,
       values,
       {
         headers: {
@@ -99,7 +101,7 @@ export const updateProjectApi = async (projectId, userId, token, values) => {
 export const fetchTasksApi = async (projectId, token) => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:5000/api/v1/projects/${projectId}/tasks`,
+      `${BASE_URL}/api/v1/projects/${projectId}/tasks`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -115,7 +117,7 @@ export const fetchTasksApi = async (projectId, token) => {
 export const fetchTaskApi = async (taskId, token) => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:5000/api/v1/tasks/${taskId}`,
+      `${BASE_URL}/api/v1/tasks/${taskId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -132,7 +134,7 @@ export const fetchTaskApi = async (taskId, token) => {
 export const createTaskApi = async (projectId, userId, values, token) => {
   try {
     const response = await axios.post(
-      `http://127.0.0.1:5000/api/v1/projects/${projectId}/users/${userId}/tasks`,
+      `${BASE_URL}/api/v1/projects/${projectId}/users/${userId}/tasks`,
       values,
       {
         headers: {
@@ -150,7 +152,7 @@ export const createTaskApi = async (projectId, userId, values, token) => {
 export const deleteTaskApi = async (taskId, userId, token) => {
   try {
     const response = await axios.delete(
-      `http://127.0.0.1:5000/api/v1/tasks/${taskId}/users/${userId}`,
+      `${BASE_URL}/api/v1/tasks/${taskId}/users/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -167,7 +169,7 @@ export const deleteTaskApi = async (taskId, userId, token) => {
 export const updateTaskApi = async (taskId, userId, token, values) => {
   try {
     const response = await axios.put(
-      `http://127.0.0.1:5000/api/v1/tasks/${taskId}/users/${userId}`,
+      `${BASE_URL}/api/v1/tasks/${taskId}/users/${userId}`,
       values,
       {
         headers: {
@@ -187,7 +189,7 @@ export const updateTaskApi = async (taskId, userId, token, values) => {
 export const fetchSubTasksApi = async (taskId, token) => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:5000/api/v1/tasks/${taskId}/subtasks`,
+      `${BASE_URL}/api/v1/tasks/${taskId}/subtasks`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -204,7 +206,7 @@ export const fetchSubTasksApi = async (taskId, token) => {
 export const fetchSubTaskApi = async (subTaskId, token) => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:5000/api/v1/subtasks/${subTaskId}`,
+      `${BASE_URL}/api/v1/subtasks/${subTaskId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -221,7 +223,7 @@ export const fetchSubTaskApi = async (subTaskId, token) => {
 export const createSubTaskApi = async (taskId, userId, values, token) => {
   try {
     const response = await axios.post(
-      `http://127.0.0.1:5000/api/v1/tasks/${taskId}/users/${userId}/subtasks`,
+      `${BASE_URL}/api/v1/tasks/${taskId}/users/${userId}/subtasks`,
       values,
       {
         headers: {
@@ -239,7 +241,7 @@ export const createSubTaskApi = async (taskId, userId, values, token) => {
 export const deleteSubTaskApi = async (subTaskId, token) => {
   try {
     const response = await axios.delete(
-      `http://127.0.0.1:5000/api/v1/subtasks/${subTaskId}`,
+      `${BASE_URL}/api/v1/subtasks/${subTaskId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -256,7 +258,7 @@ export const deleteSubTaskApi = async (subTaskId, token) => {
 export const updateSubTaskApi = async (subTaskId, token, values) => {
   try {
     const response = await axios.put(
-      `http://127.0.0.1:5000/api/v1/subtasks/${subTaskId}`,
+      `${BASE_URL}/api/v1/subtasks/${subTaskId}`,
       values,
       {
         headers: {

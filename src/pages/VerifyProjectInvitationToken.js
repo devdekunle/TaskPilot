@@ -2,6 +2,7 @@ import "../styles/form/token-verification.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../api/api";
 
 const VerifyProjectInvitationToken = () => {
   const location = useLocation();
@@ -13,7 +14,7 @@ const VerifyProjectInvitationToken = () => {
     const token = searchParams.get("token");
     try {
       const response = await axios.get(
-        `http://127.0.0.1:5000/auth/verify_invite/${token}`,
+        `${BASE_URL}/auth/verify_invite/${token}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

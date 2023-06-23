@@ -12,6 +12,7 @@ import { openModal } from "../../store/slices/modalSlice";
 import { loginUser } from "../../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Rings } from "react-loader-spinner";
+import { BASE_URL } from "../../api/api";
 
 export const Login = ({ onClick }) => {
   const navigate = useNavigate();
@@ -117,7 +118,7 @@ export const Signup = ({ onClick }) => {
   ) => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/auth/register",
+        `${BASE_URL}/auth/register`,
         values,
         {
           // withCredentials:true,
@@ -181,38 +182,33 @@ export const Signup = ({ onClick }) => {
             <div className="signup-form">
               <h1 className="heading"> Sign Up!</h1>
               <TextInput
-                label="First Name"
                 name="first_name"
                 type="text"
-                placeholder="Jane"
+                placeholder="First Name"
               />
 
               <TextInput
-                label="Last Name"
                 name="last_name"
                 type="text"
-                placeholder="Doe"
+                placeholder="Last Name"
               />
 
               <TextInput
-                label="Email Address"
                 name="email_address"
                 type="email"
-                placeholder="jane@formik.com"
+                placeholder="Email Address"
               />
 
               <TextInput
-                label="Password"
                 name="password"
                 type="password"
-                placeholder="********"
+                placeholder="Paasword"
               />
 
               <TextInput
-                label="Confirm Password"
                 name="confirmPassword"
                 type="password"
-                placeholder="********"
+                placeholder="Confirm Password"
               />
 
               <button type="submit" className="btn" disabled={isSubmitting}>

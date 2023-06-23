@@ -11,7 +11,6 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { HiOutlineUsers } from "react-icons/hi";
 import "../styles/side-nav.css";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "../store/slices/authSlice";
@@ -37,9 +36,7 @@ const SideNav = ({ mobileSideBar, setMobileSideBar }) => {
     setMobileSideBar(false);
   };
 
-  useEffect(() => {
-    console.log(user);
-  }, [dispatch]);
+  useEffect(() => {}, [dispatch]);
 
   return (
     <div className={`side-nav ${mobileSideBar && "open-sidebar"}`}>

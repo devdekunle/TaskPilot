@@ -1,10 +1,11 @@
 import axios from "axios";
+import { BASE_URL } from "./api";
 
 // Fetch all user's project
 export const fetchProjectMembersApi = async (projectId, token) => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:5000/api/v1/users/projects/${projectId}`,
+      `${BASE_URL}/api/v1/users/projects/${projectId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -20,7 +21,7 @@ export const fetchProjectMembersApi = async (projectId, token) => {
 export const addMemberToTaskApi = async (userId, taskId, token, values) => {
   try {
     const response = await axios.post(
-      `http://127.0.0.1:5000/api/v1/users/${userId}/tasks/${taskId}/add`,
+      `${BASE_URL}/api/v1/users/${userId}/tasks/${taskId}/add`,
       values,
       {
         headers: {

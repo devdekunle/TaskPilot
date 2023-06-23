@@ -4,6 +4,7 @@ import { FaSpinner } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../styles/form/token-verification.css";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../api/api";
 
 const TokenVerification = () => {
   const [errorMsg, setErrorMsg] = useState(false);
@@ -23,7 +24,7 @@ const TokenVerification = () => {
   const verifyToken = async (token) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:5000/auth/verify_email/${token}`,
+        `${BASE_URL}/auth/verify_email/${token}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

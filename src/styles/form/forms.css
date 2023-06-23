@@ -30,7 +30,7 @@
 }
 
 .auth input {
-  /* margin-bottom: 1rem; */
+  margin-bottom: .75rem;
   margin-top: 0.25rem;
   background-color: transparent;
   border: none;
