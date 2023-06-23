@@ -73,7 +73,7 @@ const Navbar = () => {
         </ul>
 
         <div className="navbar-login">
-          <NavLink to={"/auth"} onClick={toogleNav}>
+          <NavLink to={"/authenticate"} onClick={toogleNav}>
             <FontAwesomeIcon icon={faSignIn} className="navlink_icon" />
             login / sign up
           </NavLink>

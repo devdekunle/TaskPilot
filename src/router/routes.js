@@ -25,6 +25,7 @@ import Projects from "../pages/Projects";
 import PulicRoutes from "../components/PulicRoutes";
 import VerifyProjectInvitationToken from "../pages/VerifyProjectInvitationToken";
 import Calendar from "../pages/Calendar";
+import NotFound from "../pages/NotFound";
 
 export const unProtectedRoutes = createBrowserRouter(
   createRoutesFromElements(
@@ -34,12 +35,10 @@ export const unProtectedRoutes = createBrowserRouter(
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
-          <Route path="/auth" element={<Auth />} />
+          <Route path="/authenticate" element={<Auth />} />
           <Route path="/dev" element={<Dev />} />
-          <Route
-            path="/auth/token-verification"
-            element={<TokenVerification />}
-          />
+          <Route path="/token-verification" element={<TokenVerification />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Route>
 
@@ -63,6 +62,7 @@ export const unProtectedRoutes = createBrowserRouter(
           />
           <Route path="calendar" element={<Calendar />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Route>
   )
