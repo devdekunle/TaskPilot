@@ -644,7 +644,7 @@ def remove_user_from_subtask(current_user, user_id, subtask_id):
         }
         return make_response(jsonify(response)), 404
 
-@api_blueprint.route('/password',
+@api_blueprint.route('/change_password',
                     methods=['PUT'])
 @user_status
 def change_password(current_user):

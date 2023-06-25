@@ -14,7 +14,7 @@ from flask_bcrypt import generate_password_hash
 from models import storage
 from models.token_blacklist import BlackToken
 
-@authentication_blueprint.route('/forgetpassword',
+@authentication_blueprint.route('/forgot_password',
                                 methods=['POST'])
 def forget_password():
     """
