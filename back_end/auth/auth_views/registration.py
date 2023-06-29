@@ -44,8 +44,8 @@ class Register(MethodView):
 
                         )
                     # create email verification link
-                    #link = url_for('auth.verify_email_view', token=auth_token.decode(), _external=True)
-                    link = 'https://www.taskpilot.me/auth/token-verification?token={}'.format(auth_token.decode())
+                    link = url_for('auth.verify_email_view', token=auth_token.decode(), _external=True)
+                    #link = 'https://www.taskpilot.me:3000/auth/token-verification?token={}'.format(auth_token.decode())
 
                     mail_response = send_mail(subject='Confirm Email Address',
                         sender='taskpilot0@gmail.com',
